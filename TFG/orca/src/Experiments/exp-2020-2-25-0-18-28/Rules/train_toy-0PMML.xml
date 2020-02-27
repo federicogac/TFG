@@ -1,0 +1,484 @@
+<frbsPMML version='1.0' xmlns='http://www.uco.es/JFML/' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='http://www.uco.es/JFML/ http://www.uco.es/JFML/'>
+<Header copyright='Copyright (c) 2018 JFML'>
+<Extension name='user' value='JFML' extender='frbs'/>
+<Application name='frbs' version='3.1'/>
+<Timestamp>Tue Feb 25 00:18:30 CET 2020</Timestamp>
+</Header>
+<DataDictionary numberOfFields='4'>
+<DataField name='x1' optype='continuous' dataType='double'>
+<Interval closure='closedClosed' leftMargin='0,063' rightMargin='0,980'/>
+</DataField>
+<DataField name='x2' optype='continuous' dataType='double'>
+<Interval closure='closedClosed' leftMargin='0,082' rightMargin='0,935'/>
+</DataField>
+<DataField name='x3' optype='continuous' dataType='double'>
+<Interval closure='closedClosed' leftMargin='0,000' rightMargin='3,000'/>
+</DataField>
+<DataField name='y' optype='categorical' dataType='string'>
+<Value value='1'/>
+<Value value='2'/>
+<Value value='3'/>
+<Value value='4'/>
+<Value value='5'/>
+</DataField>
+</DataDictionary>
+<FrbsModel modelName='FRBCS' functionName='classification' algorithmName='MANUAL' targetFieldName='y'>
+<MiningSchema>
+<MiningField name='x1' usageType='active'/>
+<MiningField name='x2' usageType='active'/>
+<MiningField name='x3' usageType='active'/>
+<MiningField name='y' usageType='predicted'/>
+</MiningSchema>
+<Output>
+<OutputField name='Predicted_y' feature='predictedValue'/>
+<OutputField name='Probability_1' optype='continuous' dataType='double' feature='probability' value='1'/>
+<OutputField name='Probability_2' optype='continuous' dataType='double' feature='probability' value='2'/>
+<OutputField name='Probability_3' optype='continuous' dataType='double' feature='probability' value='3'/>
+<OutputField name='Probability_4' optype='continuous' dataType='double' feature='probability' value='4'/>
+<OutputField name='Probability_5' optype='continuous' dataType='double' feature='probability' value='5'/>
+</Output>
+<InferenceSchema>
+<ConjunctionOperator value='MIN'/>
+<DisjunctionOperator value='MAX'/>
+<ImplicationOperator value='MIN'/>
+<AggregationOperator value='MAX'/>
+</InferenceSchema>
+<Database>
+<MembershipFunction name='x1' numberOfLabels='5'>
+<FuzzyTerm name='S2' type='TRAPEZOID'>
+<Parameters>
+<Left>0,063</Left>
+<LeftMiddle>0,063</LeftMiddle>
+<RightMiddle>0,063</RightMiddle>
+<Right>0,155</Right>
+</Parameters>
+</FuzzyTerm>
+<FuzzyTerm name='S1' type='TRAPEZOID'>
+<Parameters>
+<Left>0,063</Left>
+<LeftMiddle>0,155</LeftMiddle>
+<RightMiddle>0,155</RightMiddle>
+<Right>0,411</Right>
+</Parameters>
+</FuzzyTerm>
+<FuzzyTerm name='CE' type='TRAPEZOID'>
+<Parameters>
+<Left>0,155</Left>
+<LeftMiddle>0,411</LeftMiddle>
+<RightMiddle>0,411</RightMiddle>
+<Right>0,658</Right>
+</Parameters>
+</FuzzyTerm>
+<FuzzyTerm name='B1' type='TRAPEZOID'>
+<Parameters>
+<Left>0,411</Left>
+<LeftMiddle>0,658</LeftMiddle>
+<RightMiddle>0,658</RightMiddle>
+<Right>0,980</Right>
+</Parameters>
+</FuzzyTerm>
+<FuzzyTerm name='B2' type='TRAPEZOID'>
+<Parameters>
+<Left>0,658</Left>
+<LeftMiddle>0,980</LeftMiddle>
+<RightMiddle>0,980</RightMiddle>
+<Right>0,980</Right>
+</Parameters>
+</FuzzyTerm>
+</MembershipFunction>
+<MembershipFunction name='x2' numberOfLabels='5'>
+<FuzzyTerm name='S2' type='TRAPEZOID'>
+<Parameters>
+<Left>0,082</Left>
+<LeftMiddle>0,082</LeftMiddle>
+<RightMiddle>0,082</RightMiddle>
+<Right>0,227</Right>
+</Parameters>
+</FuzzyTerm>
+<FuzzyTerm name='S1' type='TRAPEZOID'>
+<Parameters>
+<Left>0,082</Left>
+<LeftMiddle>0,227</LeftMiddle>
+<RightMiddle>0,227</RightMiddle>
+<Right>0,452</Right>
+</Parameters>
+</FuzzyTerm>
+<FuzzyTerm name='CE' type='TRAPEZOID'>
+<Parameters>
+<Left>0,227</Left>
+<LeftMiddle>0,452</LeftMiddle>
+<RightMiddle>0,452</RightMiddle>
+<Right>0,600</Right>
+</Parameters>
+</FuzzyTerm>
+<FuzzyTerm name='B1' type='TRAPEZOID'>
+<Parameters>
+<Left>0,452</Left>
+<LeftMiddle>0,600</LeftMiddle>
+<RightMiddle>0,600</RightMiddle>
+<Right>0,935</Right>
+</Parameters>
+</FuzzyTerm>
+<FuzzyTerm name='B2' type='TRAPEZOID'>
+<Parameters>
+<Left>0,600</Left>
+<LeftMiddle>0,935</LeftMiddle>
+<RightMiddle>0,935</RightMiddle>
+<Right>0,935</Right>
+</Parameters>
+</FuzzyTerm>
+</MembershipFunction>
+<MembershipFunction name='x3' numberOfLabels='4'>
+<FuzzyTerm name='a' type='TRAPEZOID'>
+<Parameters>
+<Left>0,000</Left>
+<LeftMiddle>0,000</LeftMiddle>
+<RightMiddle>0,000</RightMiddle>
+<Right>0,000</Right>
+</Parameters>
+</FuzzyTerm>
+<FuzzyTerm name='b' type='TRAPEZOID'>
+<Parameters>
+<Left>1,000</Left>
+<LeftMiddle>1,000</LeftMiddle>
+<RightMiddle>1,000</RightMiddle>
+<Right>1,000</Right>
+</Parameters>
+</FuzzyTerm>
+<FuzzyTerm name='c' type='TRAPEZOID'>
+<Parameters>
+<Left>2,000</Left>
+<LeftMiddle>2,000</LeftMiddle>
+<RightMiddle>2,000</RightMiddle>
+<Right>2,000</Right>
+</Parameters>
+</FuzzyTerm>
+<FuzzyTerm name='d' type='TRAPEZOID'>
+<Parameters>
+<Left>3,000</Left>
+<LeftMiddle>3,000</LeftMiddle>
+<RightMiddle>3,000</RightMiddle>
+<Right>3,000</Right>
+</Parameters>
+</FuzzyTerm>
+</MembershipFunction>
+</Database>
+<Rulebase numberOfRules='21'>
+<Rule id='1'>
+<If>
+<CompoundPredicate booleanOperator='and'>
+<SimplePredicate field='x1' value='dont_care'/>
+<CompoundPredicate booleanOperator='and'>
+<SimplePredicate field='x2' value='S1'/>
+<SimplePredicate field='x3' value='a'/>
+</CompoundPredicate>
+</CompoundPredicate>
+</If>
+<Then>
+<SimplePredicate field='y' value='4'/>
+</Then>
+<Grade>0,846</Grade>
+</Rule>
+<Rule id='2'>
+<If>
+<CompoundPredicate booleanOperator='and'>
+<SimplePredicate field='x1' value='dont_care'/>
+<CompoundPredicate booleanOperator='and'>
+<SimplePredicate field='x2' value='S1'/>
+<SimplePredicate field='x3' value='b'/>
+</CompoundPredicate>
+</CompoundPredicate>
+</If>
+<Then>
+<SimplePredicate field='y' value='4'/>
+</Then>
+<Grade>0,846</Grade>
+</Rule>
+<Rule id='3'>
+<If>
+<CompoundPredicate booleanOperator='and'>
+<SimplePredicate field='x1' value='dont_care'/>
+<CompoundPredicate booleanOperator='and'>
+<SimplePredicate field='x2' value='S1'/>
+<SimplePredicate field='x3' value='c'/>
+</CompoundPredicate>
+</CompoundPredicate>
+</If>
+<Then>
+<SimplePredicate field='y' value='4'/>
+</Then>
+<Grade>0,846</Grade>
+</Rule>
+<Rule id='4'>
+<If>
+<CompoundPredicate booleanOperator='and'>
+<SimplePredicate field='x1' value='dont_care'/>
+<CompoundPredicate booleanOperator='and'>
+<SimplePredicate field='x2' value='CE'/>
+<SimplePredicate field='x3' value='a'/>
+</CompoundPredicate>
+</CompoundPredicate>
+</If>
+<Then>
+<SimplePredicate field='y' value='4'/>
+</Then>
+<Grade>0,846</Grade>
+</Rule>
+<Rule id='5'>
+<If>
+<CompoundPredicate booleanOperator='and'>
+<SimplePredicate field='x1' value='dont_care'/>
+<CompoundPredicate booleanOperator='and'>
+<SimplePredicate field='x2' value='CE'/>
+<SimplePredicate field='x3' value='b'/>
+</CompoundPredicate>
+</CompoundPredicate>
+</If>
+<Then>
+<SimplePredicate field='y' value='4'/>
+</Then>
+<Grade>0,846</Grade>
+</Rule>
+<Rule id='6'>
+<If>
+<CompoundPredicate booleanOperator='and'>
+<SimplePredicate field='x1' value='dont_care'/>
+<CompoundPredicate booleanOperator='and'>
+<SimplePredicate field='x2' value='CE'/>
+<SimplePredicate field='x3' value='c'/>
+</CompoundPredicate>
+</CompoundPredicate>
+</If>
+<Then>
+<SimplePredicate field='y' value='4'/>
+</Then>
+<Grade>0,846</Grade>
+</Rule>
+<Rule id='7'>
+<If>
+<CompoundPredicate booleanOperator='and'>
+<SimplePredicate field='x1' value='dont_care'/>
+<CompoundPredicate booleanOperator='and'>
+<SimplePredicate field='x2' value='B1'/>
+<SimplePredicate field='x3' value='a'/>
+</CompoundPredicate>
+</CompoundPredicate>
+</If>
+<Then>
+<SimplePredicate field='y' value='4'/>
+</Then>
+<Grade>0,846</Grade>
+</Rule>
+<Rule id='8'>
+<If>
+<CompoundPredicate booleanOperator='and'>
+<SimplePredicate field='x1' value='dont_care'/>
+<CompoundPredicate booleanOperator='and'>
+<SimplePredicate field='x2' value='B1'/>
+<SimplePredicate field='x3' value='b'/>
+</CompoundPredicate>
+</CompoundPredicate>
+</If>
+<Then>
+<SimplePredicate field='y' value='4'/>
+</Then>
+<Grade>0,846</Grade>
+</Rule>
+<Rule id='9'>
+<If>
+<CompoundPredicate booleanOperator='and'>
+<SimplePredicate field='x1' value='dont_care'/>
+<CompoundPredicate booleanOperator='and'>
+<SimplePredicate field='x2' value='B1'/>
+<SimplePredicate field='x3' value='c'/>
+</CompoundPredicate>
+</CompoundPredicate>
+</If>
+<Then>
+<SimplePredicate field='y' value='4'/>
+</Then>
+<Grade>0,846</Grade>
+</Rule>
+<Rule id='10'>
+<If>
+<CompoundPredicate booleanOperator='and'>
+<SimplePredicate field='x1' value='dont_care'/>
+<CompoundPredicate booleanOperator='and'>
+<SimplePredicate field='x2' value='B2'/>
+<SimplePredicate field='x3' value='a'/>
+</CompoundPredicate>
+</CompoundPredicate>
+</If>
+<Then>
+<SimplePredicate field='y' value='4'/>
+</Then>
+<Grade>0,846</Grade>
+</Rule>
+<Rule id='11'>
+<If>
+<CompoundPredicate booleanOperator='and'>
+<SimplePredicate field='x1' value='dont_care'/>
+<CompoundPredicate booleanOperator='and'>
+<SimplePredicate field='x2' value='B2'/>
+<SimplePredicate field='x3' value='b'/>
+</CompoundPredicate>
+</CompoundPredicate>
+</If>
+<Then>
+<SimplePredicate field='y' value='4'/>
+</Then>
+<Grade>0,846</Grade>
+</Rule>
+<Rule id='12'>
+<If>
+<CompoundPredicate booleanOperator='and'>
+<SimplePredicate field='x1' value='dont_care'/>
+<CompoundPredicate booleanOperator='and'>
+<SimplePredicate field='x2' value='B2'/>
+<SimplePredicate field='x3' value='c'/>
+</CompoundPredicate>
+</CompoundPredicate>
+</If>
+<Then>
+<SimplePredicate field='y' value='4'/>
+</Then>
+<Grade>0,846</Grade>
+</Rule>
+<Rule id='13'>
+<If>
+<CompoundPredicate booleanOperator='and'>
+<SimplePredicate field='x1' value='B1'/>
+<CompoundPredicate booleanOperator='and'>
+<SimplePredicate field='x2' value='B1'/>
+<SimplePredicate field='x3' value='dont_care'/>
+</CompoundPredicate>
+</CompoundPredicate>
+</If>
+<Then>
+<SimplePredicate field='y' value='4'/>
+</Then>
+<Grade>1,000</Grade>
+</Rule>
+<Rule id='14'>
+<If>
+<CompoundPredicate booleanOperator='and'>
+<SimplePredicate field='x1' value='B1'/>
+<CompoundPredicate booleanOperator='and'>
+<SimplePredicate field='x2' value='B2'/>
+<SimplePredicate field='x3' value='dont_care'/>
+</CompoundPredicate>
+</CompoundPredicate>
+</If>
+<Then>
+<SimplePredicate field='y' value='4'/>
+</Then>
+<Grade>1,000</Grade>
+</Rule>
+<Rule id='15'>
+<If>
+<CompoundPredicate booleanOperator='and'>
+<SimplePredicate field='x1' value='B2'/>
+<CompoundPredicate booleanOperator='and'>
+<SimplePredicate field='x2' value='dont_care'/>
+<SimplePredicate field='x3' value='d'/>
+</CompoundPredicate>
+</CompoundPredicate>
+</If>
+<Then>
+<SimplePredicate field='y' value='2'/>
+</Then>
+<Grade>1,000</Grade>
+</Rule>
+<Rule id='16'>
+<If>
+<CompoundPredicate booleanOperator='and'>
+<SimplePredicate field='x1' value='S2'/>
+<CompoundPredicate booleanOperator='and'>
+<SimplePredicate field='x2' value='dont_care'/>
+<SimplePredicate field='x3' value='d'/>
+</CompoundPredicate>
+</CompoundPredicate>
+</If>
+<Then>
+<SimplePredicate field='y' value='1'/>
+</Then>
+<Grade>1,000</Grade>
+</Rule>
+<Rule id='17'>
+<If>
+<CompoundPredicate booleanOperator='and'>
+<SimplePredicate field='x1' value='dont_care'/>
+<CompoundPredicate booleanOperator='and'>
+<SimplePredicate field='x2' value='S2'/>
+<SimplePredicate field='x3' value='a'/>
+</CompoundPredicate>
+</CompoundPredicate>
+</If>
+<Then>
+<SimplePredicate field='y' value='3'/>
+</Then>
+<Grade>1,000</Grade>
+</Rule>
+<Rule id='18'>
+<If>
+<CompoundPredicate booleanOperator='and'>
+<SimplePredicate field='x1' value='dont_care'/>
+<CompoundPredicate booleanOperator='and'>
+<SimplePredicate field='x2' value='S2'/>
+<SimplePredicate field='x3' value='b'/>
+</CompoundPredicate>
+</CompoundPredicate>
+</If>
+<Then>
+<SimplePredicate field='y' value='3'/>
+</Then>
+<Grade>1,000</Grade>
+</Rule>
+<Rule id='19'>
+<If>
+<CompoundPredicate booleanOperator='and'>
+<SimplePredicate field='x1' value='dont_care'/>
+<CompoundPredicate booleanOperator='and'>
+<SimplePredicate field='x2' value='S2'/>
+<SimplePredicate field='x3' value='c'/>
+</CompoundPredicate>
+</CompoundPredicate>
+</If>
+<Then>
+<SimplePredicate field='y' value='3'/>
+</Then>
+<Grade>1,000</Grade>
+</Rule>
+<Rule id='20'>
+<If>
+<CompoundPredicate booleanOperator='and'>
+<SimplePredicate field='x1' value='CE'/>
+<CompoundPredicate booleanOperator='and'>
+<SimplePredicate field='x2' value='S2'/>
+<SimplePredicate field='x3' value='d'/>
+</CompoundPredicate>
+</CompoundPredicate>
+</If>
+<Then>
+<SimplePredicate field='y' value='5'/>
+</Then>
+<Grade>1,000</Grade>
+</Rule>
+<Rule id='21'>
+<If>
+<CompoundPredicate booleanOperator='and'>
+<SimplePredicate field='x1' value='dont_care'/>
+<CompoundPredicate booleanOperator='and'>
+<SimplePredicate field='x2' value='dont_care'/>
+<SimplePredicate field='x3' value='dont_care'/>
+</CompoundPredicate>
+</CompoundPredicate>
+</If>
+<Then>
+<SimplePredicate field='y' value='4'/>
+</Then>
+<Grade>0,542</Grade>
+</Rule>
+</Rulebase>
+</FrbsModel>
+</frbsPMML>

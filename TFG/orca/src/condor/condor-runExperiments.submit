@@ -1,0 +1,43 @@
+##################################
+####### Run the Algorithm ########## 
+##################################
+
+# Condor Universe
+universe = vanilla
+
+# Script to run
+executable = condor-runExperiments.sh
+
+# Script parameters
+arguments = $(directory) $(Process)
+
+# In our system, all the machines share the experiments directories by NFS
+should_transfer_files = no
+
+# Requirements to match tasks with machines
+requirements = ((Arch == "X86_64" && OpSys == "Linux") || (Arch == "INTEL" && OpSys == "Linux")) && (Memory >= 400)
+
+# Rank machines by available memory
+Rank = Memory
+
+# log file
+# DAG makes that there will be an unique log file!
+log = ./$(directory)/condor-runExperiments.log
+
+# console output file
+output = ./$(directory)/condor-runExperiments-$(Process).out
+
+# error file
+error = ./$(directory)/condor-runExperiments-$(Process).err
+
+# Error notification email
+notification = Error
+notify_user = admin@foo.net
+
+priority = 0
+
+# Get all environment variables
+getenv = True
+
+# Queue executions considering variable $(Process)
+queue $(numRuns)

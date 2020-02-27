@@ -1,0 +1,42 @@
+#########################################################
+####     Separar los ficheros de configuración    #######
+#########################################################
+
+# Condor Universe
+universe = vanilla
+
+# Script to run
+executable = condor-createExperiments.sh
+
+# Script parameters
+arguments = $(experimentName) $(directory)
+
+# In our system, all the machines share the experiments directories by NFS
+should_transfer_files = no
+
+# Requirements to match tasks with machines
+requirements = ((Arch == "X86_64" && OpSys == "Linux") || (Arch == "INTEL" && OpSys == "Linux"))
+
+# Rank machines by available memory
+Rank = Memory
+
+# log file
+log = ./$(directory)/condor-createExperiments.log
+
+# console output file
+output = ./$(directory)/condor-createExperiments.out
+
+# error file
+error = ./$(directory)/condor-createExperiments.err
+
+# Error notification email
+notification = Error
+notify_user = admin@foo.net
+
+priority = 0
+
+# Get all environment variables
+getenv = True
+
+# Queue executions considering variable $(Process)
+queue
