@@ -1,0 +1,21 @@
+@relation toy-ordinal-weka.filters.supervised.instance.StratifiedRemoveFolds-S1421934691-N4-F1
+
+@attribute x1 numeric
+@attribute x2 numeric
+@attribute x3 {a,b,c,d}
+@attribute y {1,2,3,4,5}
+
+@data
+
+0.30528,0.10141,a,1
+0.3859,0.12815,b,4
+0.5902,0.98591,a,3
+0.028138,0.43011,c,4
+0.85163,0.67125,b,4
+0.6944,0.92036,d,4
+0.7736,0.61679,a,2
+0.24295,0.16515,b,4
+0.2936,0.023302,c,4
+0.23868,0.38973,d,4
+0.24555,0.2838,d,5
+0.38778,0.24191,a,4
