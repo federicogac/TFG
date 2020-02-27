@@ -1,6 +1,0 @@
-git init 
-git remote add origin ssh://git@150.214.112.168:2222/jcgamez/nslvord-orca.git
-git add .
-git commit -m "initial"
-git push origin master
-
