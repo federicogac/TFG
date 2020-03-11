@@ -174,6 +174,7 @@ classdef NSLVOrd < Algorithm
             JavaClass = NSLVOrd;
             JavaClass.LoadModel(obj.model.fuzzyProblem,obj.model.rules);
             result = JavaClass.Test(datas);
+            JavaClass.SeeRules();
             
             % Procesar salidas
             targets = obj.ConvertCategoricToTargets(result,obj.model.outPutsClass);

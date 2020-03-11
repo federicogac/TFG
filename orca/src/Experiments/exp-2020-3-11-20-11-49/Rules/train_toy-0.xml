@@ -1,0 +1,487 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<fuzzySystem xmlns="http://www.ieee1855.org">
+    <knowledgeBase>
+        <fuzzyVariable name="x1" scale="" domainleft="0.062849" domainright="0.97992" type="input">
+            <fuzzyTerm name="S2" complement="false">
+                <trapezoidShape param1="0.062849" param2="0.062849" param3="0.062849" param4="0.1546035"/>
+            </fuzzyTerm>
+            <fuzzyTerm name="S1" complement="false">
+                <trapezoidShape param1="0.062849" param2="0.1546035" param3="0.1546035" param4="0.41128"/>
+            </fuzzyTerm>
+            <fuzzyTerm name="CE" complement="false">
+                <trapezoidShape param1="0.1546035" param2="0.41128" param3="0.41128" param4="0.658235"/>
+            </fuzzyTerm>
+            <fuzzyTerm name="B1" complement="false">
+                <trapezoidShape param1="0.41128" param2="0.658235" param3="0.658235" param4="0.97992"/>
+            </fuzzyTerm>
+            <fuzzyTerm name="B2" complement="false">
+                <trapezoidShape param1="0.658235" param2="0.97992" param3="0.97992" param4="0.97992"/>
+            </fuzzyTerm>
+        </fuzzyVariable>
+        <fuzzyVariable name="x2" scale="" domainleft="0.08235" domainright="0.93525" type="input">
+            <fuzzyTerm name="S2" complement="false">
+                <trapezoidShape param1="0.08235" param2="0.08235" param3="0.08235" param4="0.22719"/>
+            </fuzzyTerm>
+            <fuzzyTerm name="S1" complement="false">
+                <trapezoidShape param1="0.08235" param2="0.22719" param3="0.22719" param4="0.451915"/>
+            </fuzzyTerm>
+            <fuzzyTerm name="CE" complement="false">
+                <trapezoidShape param1="0.22719" param2="0.451915" param3="0.451915" param4="0.599895"/>
+            </fuzzyTerm>
+            <fuzzyTerm name="B1" complement="false">
+                <trapezoidShape param1="0.451915" param2="0.599895" param3="0.599895" param4="0.93525"/>
+            </fuzzyTerm>
+            <fuzzyTerm name="B2" complement="false">
+                <trapezoidShape param1="0.599895" param2="0.93525" param3="0.93525" param4="0.93525"/>
+            </fuzzyTerm>
+        </fuzzyVariable>
+        <fuzzyVariable name="x3" scale="" domainleft="0.0" domainright="3.0" type="input">
+            <fuzzyTerm name="a" complement="false">
+                <trapezoidShape param1="0.0" param2="0.0" param3="0.0" param4="0.0"/>
+            </fuzzyTerm>
+            <fuzzyTerm name="b" complement="false">
+                <trapezoidShape param1="1.0" param2="1.0" param3="1.0" param4="1.0"/>
+            </fuzzyTerm>
+            <fuzzyTerm name="c" complement="false">
+                <trapezoidShape param1="2.0" param2="2.0" param3="2.0" param4="2.0"/>
+            </fuzzyTerm>
+            <fuzzyTerm name="d" complement="false">
+                <trapezoidShape param1="3.0" param2="3.0" param3="3.0" param4="3.0"/>
+            </fuzzyTerm>
+        </fuzzyVariable>
+        <fuzzyVariable name="y" scale="" domainleft="0.0" domainright="4.0" type="output">
+            <fuzzyTerm name="1" complement="false">
+                <singletonShape param1="0.0"/>
+            </fuzzyTerm>
+            <fuzzyTerm name="2" complement="false">
+                <singletonShape param1="1.0"/>
+            </fuzzyTerm>
+            <fuzzyTerm name="3" complement="false">
+                <singletonShape param1="2.0"/>
+            </fuzzyTerm>
+            <fuzzyTerm name="4" complement="false">
+                <singletonShape param1="3.0"/>
+            </fuzzyTerm>
+            <fuzzyTerm name="5" complement="false">
+                <singletonShape param1="4.0"/>
+            </fuzzyTerm>
+        </fuzzyVariable>
+    </knowledgeBase>
+    <mamdaniRuleBase name="" activationMethod="MIN" andMethod="MIN" orMethod="MAX">
+        <rule name="R0" andMethod="MIN" connector="and" weight="0.84615386">
+            <antecedent>
+                <clause>
+                    <variable>x2</variable>
+                    <term>S1</term>
+                </clause>
+                <clause>
+                    <variable>x3</variable>
+                    <term>a</term>
+                </clause>
+            </antecedent>
+            <consequent>
+                <then>
+                    <clause>
+                        <variable>y</variable>
+                        <term>4</term>
+                    </clause>
+                </then>
+            </consequent>
+        </rule>
+        <rule name="R1" andMethod="MIN" connector="and" weight="0.84615386">
+            <antecedent>
+                <clause>
+                    <variable>x2</variable>
+                    <term>S1</term>
+                </clause>
+                <clause>
+                    <variable>x3</variable>
+                    <term>b</term>
+                </clause>
+            </antecedent>
+            <consequent>
+                <then>
+                    <clause>
+                        <variable>y</variable>
+                        <term>4</term>
+                    </clause>
+                </then>
+            </consequent>
+        </rule>
+        <rule name="R2" andMethod="MIN" connector="and" weight="0.84615386">
+            <antecedent>
+                <clause>
+                    <variable>x2</variable>
+                    <term>S1</term>
+                </clause>
+                <clause>
+                    <variable>x3</variable>
+                    <term>c</term>
+                </clause>
+            </antecedent>
+            <consequent>
+                <then>
+                    <clause>
+                        <variable>y</variable>
+                        <term>4</term>
+                    </clause>
+                </then>
+            </consequent>
+        </rule>
+        <rule name="R3" andMethod="MIN" connector="and" weight="0.84615386">
+            <antecedent>
+                <clause>
+                    <variable>x2</variable>
+                    <term>CE</term>
+                </clause>
+                <clause>
+                    <variable>x3</variable>
+                    <term>a</term>
+                </clause>
+            </antecedent>
+            <consequent>
+                <then>
+                    <clause>
+                        <variable>y</variable>
+                        <term>4</term>
+                    </clause>
+                </then>
+            </consequent>
+        </rule>
+        <rule name="R4" andMethod="MIN" connector="and" weight="0.84615386">
+            <antecedent>
+                <clause>
+                    <variable>x2</variable>
+                    <term>CE</term>
+                </clause>
+                <clause>
+                    <variable>x3</variable>
+                    <term>b</term>
+                </clause>
+            </antecedent>
+            <consequent>
+                <then>
+                    <clause>
+                        <variable>y</variable>
+                        <term>4</term>
+                    </clause>
+                </then>
+            </consequent>
+        </rule>
+        <rule name="R5" andMethod="MIN" connector="and" weight="0.84615386">
+            <antecedent>
+                <clause>
+                    <variable>x2</variable>
+                    <term>CE</term>
+                </clause>
+                <clause>
+                    <variable>x3</variable>
+                    <term>c</term>
+                </clause>
+            </antecedent>
+            <consequent>
+                <then>
+                    <clause>
+                        <variable>y</variable>
+                        <term>4</term>
+                    </clause>
+                </then>
+            </consequent>
+        </rule>
+        <rule name="R6" andMethod="MIN" connector="and" weight="0.84615386">
+            <antecedent>
+                <clause>
+                    <variable>x2</variable>
+                    <term>B1</term>
+                </clause>
+                <clause>
+                    <variable>x3</variable>
+                    <term>a</term>
+                </clause>
+            </antecedent>
+            <consequent>
+                <then>
+                    <clause>
+                        <variable>y</variable>
+                        <term>4</term>
+                    </clause>
+                </then>
+            </consequent>
+        </rule>
+        <rule name="R7" andMethod="MIN" connector="and" weight="0.84615386">
+            <antecedent>
+                <clause>
+                    <variable>x2</variable>
+                    <term>B1</term>
+                </clause>
+                <clause>
+                    <variable>x3</variable>
+                    <term>b</term>
+                </clause>
+            </antecedent>
+            <consequent>
+                <then>
+                    <clause>
+                        <variable>y</variable>
+                        <term>4</term>
+                    </clause>
+                </then>
+            </consequent>
+        </rule>
+        <rule name="R8" andMethod="MIN" connector="and" weight="0.84615386">
+            <antecedent>
+                <clause>
+                    <variable>x2</variable>
+                    <term>B1</term>
+                </clause>
+                <clause>
+                    <variable>x3</variable>
+                    <term>c</term>
+                </clause>
+            </antecedent>
+            <consequent>
+                <then>
+                    <clause>
+                        <variable>y</variable>
+                        <term>4</term>
+                    </clause>
+                </then>
+            </consequent>
+        </rule>
+        <rule name="R9" andMethod="MIN" connector="and" weight="0.84615386">
+            <antecedent>
+                <clause>
+                    <variable>x2</variable>
+                    <term>B2</term>
+                </clause>
+                <clause>
+                    <variable>x3</variable>
+                    <term>a</term>
+                </clause>
+            </antecedent>
+            <consequent>
+                <then>
+                    <clause>
+                        <variable>y</variable>
+                        <term>4</term>
+                    </clause>
+                </then>
+            </consequent>
+        </rule>
+        <rule name="R10" andMethod="MIN" connector="and" weight="0.84615386">
+            <antecedent>
+                <clause>
+                    <variable>x2</variable>
+                    <term>B2</term>
+                </clause>
+                <clause>
+                    <variable>x3</variable>
+                    <term>b</term>
+                </clause>
+            </antecedent>
+            <consequent>
+                <then>
+                    <clause>
+                        <variable>y</variable>
+                        <term>4</term>
+                    </clause>
+                </then>
+            </consequent>
+        </rule>
+        <rule name="R11" andMethod="MIN" connector="and" weight="0.84615386">
+            <antecedent>
+                <clause>
+                    <variable>x2</variable>
+                    <term>B2</term>
+                </clause>
+                <clause>
+                    <variable>x3</variable>
+                    <term>c</term>
+                </clause>
+            </antecedent>
+            <consequent>
+                <then>
+                    <clause>
+                        <variable>y</variable>
+                        <term>4</term>
+                    </clause>
+                </then>
+            </consequent>
+        </rule>
+        <rule name="R12" andMethod="MIN" connector="and" weight="1.0">
+            <antecedent>
+                <clause>
+                    <variable>x1</variable>
+                    <term>B1</term>
+                </clause>
+                <clause>
+                    <variable>x2</variable>
+                    <term>B1</term>
+                </clause>
+            </antecedent>
+            <consequent>
+                <then>
+                    <clause>
+                        <variable>y</variable>
+                        <term>4</term>
+                    </clause>
+                </then>
+            </consequent>
+        </rule>
+        <rule name="R13" andMethod="MIN" connector="and" weight="1.0">
+            <antecedent>
+                <clause>
+                    <variable>x1</variable>
+                    <term>B1</term>
+                </clause>
+                <clause>
+                    <variable>x2</variable>
+                    <term>B2</term>
+                </clause>
+            </antecedent>
+            <consequent>
+                <then>
+                    <clause>
+                        <variable>y</variable>
+                        <term>4</term>
+                    </clause>
+                </then>
+            </consequent>
+        </rule>
+        <rule name="R14" andMethod="MIN" connector="and" weight="1.0">
+            <antecedent>
+                <clause>
+                    <variable>x1</variable>
+                    <term>B2</term>
+                </clause>
+                <clause>
+                    <variable>x3</variable>
+                    <term>d</term>
+                </clause>
+            </antecedent>
+            <consequent>
+                <then>
+                    <clause>
+                        <variable>y</variable>
+                        <term>2</term>
+                    </clause>
+                </then>
+            </consequent>
+        </rule>
+        <rule name="R15" andMethod="MIN" connector="and" weight="1.0">
+            <antecedent>
+                <clause>
+                    <variable>x1</variable>
+                    <term>S2</term>
+                </clause>
+                <clause>
+                    <variable>x3</variable>
+                    <term>d</term>
+                </clause>
+            </antecedent>
+            <consequent>
+                <then>
+                    <clause>
+                        <variable>y</variable>
+                        <term>1</term>
+                    </clause>
+                </then>
+            </consequent>
+        </rule>
+        <rule name="R16" andMethod="MIN" connector="and" weight="1.0">
+            <antecedent>
+                <clause>
+                    <variable>x2</variable>
+                    <term>S2</term>
+                </clause>
+                <clause>
+                    <variable>x3</variable>
+                    <term>a</term>
+                </clause>
+            </antecedent>
+            <consequent>
+                <then>
+                    <clause>
+                        <variable>y</variable>
+                        <term>3</term>
+                    </clause>
+                </then>
+            </consequent>
+        </rule>
+        <rule name="R17" andMethod="MIN" connector="and" weight="1.0">
+            <antecedent>
+                <clause>
+                    <variable>x2</variable>
+                    <term>S2</term>
+                </clause>
+                <clause>
+                    <variable>x3</variable>
+                    <term>b</term>
+                </clause>
+            </antecedent>
+            <consequent>
+                <then>
+                    <clause>
+                        <variable>y</variable>
+                        <term>3</term>
+                    </clause>
+                </then>
+            </consequent>
+        </rule>
+        <rule name="R18" andMethod="MIN" connector="and" weight="1.0">
+            <antecedent>
+                <clause>
+                    <variable>x2</variable>
+                    <term>S2</term>
+                </clause>
+                <clause>
+                    <variable>x3</variable>
+                    <term>c</term>
+                </clause>
+            </antecedent>
+            <consequent>
+                <then>
+                    <clause>
+                        <variable>y</variable>
+                        <term>3</term>
+                    </clause>
+                </then>
+            </consequent>
+        </rule>
+        <rule name="R19" andMethod="MIN" connector="and" weight="1.0">
+            <antecedent>
+                <clause>
+                    <variable>x1</variable>
+                    <term>CE</term>
+                </clause>
+                <clause>
+                    <variable>x2</variable>
+                    <term>S2</term>
+                </clause>
+                <clause>
+                    <variable>x3</variable>
+                    <term>d</term>
+                </clause>
+            </antecedent>
+            <consequent>
+                <then>
+                    <clause>
+                        <variable>y</variable>
+                        <term>5</term>
+                    </clause>
+                </then>
+            </consequent>
+        </rule>
+        <rule name="R20" andMethod="MIN" connector="and" weight="0.5416667">
+            <antecedent/>
+            <consequent>
+                <then>
+                    <clause>
+                        <variable>y</variable>
+                        <term>4</term>
+                    </clause>
+                </then>
+            </consequent>
+        </rule>
+    </mamdaniRuleBase>
+</fuzzySystem>
