@@ -63,6 +63,11 @@ public class NSLVOrd {
     static String configFile = null;
     static String[] poblationParam;
     
+    public static void SeeRules(){
+        VisualRules lista = new VisualRules(fuzzyProblem[0], R[0]);
+        lista.SeeRules();
+    }
+    
     public static String[] Train(String[] _header,String[] _datas,String[] args){
         initParametersTFG(args);
         
@@ -81,7 +86,7 @@ public class NSLVOrd {
         
         //String dir = "./XMLFiles/"; 
         //String name = "IrisMamdani2";
-        //XMLFile(fuzzyProblem[0],R[0]);
+        //XMLFile(dir,name);
         
         return DebugClass.printForKeelTFG(E_par,R,1);
         
@@ -126,6 +131,8 @@ public class NSLVOrd {
         double[] Resultado;
         Resultado= DebugClass.printForCalcMetricsTFG(E_par_test[0],R[0]);
      
+        //SeeRules();
+        
         return DebugClass.printForKeelTFG(E_par_test,R,1);
         
         /*for (String _Resultado1 : _Resultado) {
@@ -190,7 +197,7 @@ public class NSLVOrd {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws InterruptedException, IOException {
-        fileTrain = "iris.tra.dat";
+        fileTrain = "train_toy-0.arff";
         
         String[] _Header = ReadHeader(fileTrain); 
         String[] _Datas = ReadDatas(fileTrain);
@@ -220,13 +227,13 @@ public class NSLVOrd {
         param[18] = "0.14";
         
         String[] _Resultado = Train(_Header,_Datas,param);
-        /*
-        fileTest = "iris.tst.dat";
+        
+        fileTest = "test_toy-0.arff";
         
         _Datas = ReadDatas(fileTest);
         
         _Resultado = Test(_Datas);
-        */
+        
       /*
       if (args.length == 4){ //para el envío de e-mails
         DebugClass.origMail= args[1];

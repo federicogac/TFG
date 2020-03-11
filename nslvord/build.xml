@@ -14,6 +14,7 @@
     <target name = "-post-jar">
         <jar jarfile="${dist.jar}" update = "true">
             <zipfileset src="JFML\JFML-master.jar" excludes="META-INF/*"/>
+            <zipfileset src="Rule\Rule.jar" excludes="META-INF/*"/>
             <manifest>
                 <attribute name = "Main-Class" value = "NSLVOrd.NSLVOrd" />
             </manifest>
