@@ -1,6 +1,7 @@
 package NSLVOrdJava;
 
 // para la integración en keel
+import SeeRules.VisualRules;
 import keel.Dataset.*;
 
 import java.io.*;
@@ -246,7 +247,7 @@ public class NSLVOrdJava {
         
         String dir = "./XMLFiles/"; 
         String name = "IrisMamdani2";
-        XMLFile(dir,name);
+        //XMLFile(dir,name);
         
         fileTest = "test_toy-0.arff";
         

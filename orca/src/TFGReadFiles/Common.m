@@ -1,3 +1,4 @@
+% New file for TFG
 classdef Common < handle
     properties
         categ = 0;

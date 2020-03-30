@@ -1,3 +1,4 @@
+% File changed for TFG
 classdef DataSet < handle
     %DATASET Class to specify the name of the datasets and perform data preprocessing
     %
@@ -33,7 +34,7 @@ classdef DataSet < handle
             end
         end
         
-        % Modificado para TFG (añadido parametro de entrada method)
+        % Changed for TFG (new input parameter 'method')
         function [trainSet, testSet] = preProcessData(obj,method)
         % PREPROCESSDATA preprocess a data partition, i.e., deletes the constant 
         %   and non numerical atributes and standarize the data. Test set
@@ -96,7 +97,7 @@ classdef DataSet < handle
         %
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         
-        % Modificado para TFG
+        % Changed for TFG
         function [trainSet, testSet] = standarizeData(trainSet,testSet)
         % STANDARIZEDATA standarizes a set of training and testing patterns.
         %   [TRAINSET, TESTSET] = STANDARIZEDATA(TRAINSET,TESTSET)
@@ -188,7 +189,7 @@ classdef DataSet < handle
             
         end
         
-        % Modificado para TFG
+        % Changed for TFG 
         function [trainSet,testSet] = deleteConstantAtributes(trainSet, testSet)
         % DELETECONSTANTATRIBUTES This function deletes constant variables
         %   [TRAINSET, TESTSET] = DELETECONSTANTATRIBUTES(TRAINSET,TESTSET)

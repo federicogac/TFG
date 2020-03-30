@@ -1,4 +1,4 @@
-% Modificado para TFG
+% File changed for TFG
 function optimals = paramopt(alg, param, train, varargin)
 % PARAMOPT Function to optimize a set of parameters of a method
 %   in a specific train set.

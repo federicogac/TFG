@@ -1,3 +1,4 @@
+% New file for TFG
 classdef NSLVOrd < Algorithm
     properties
         description = 'Inclusion del algoritmo NSLVOrd como TFG de Federico Garcia-Arevalo Calles';
@@ -7,7 +8,7 @@ classdef NSLVOrd < Algorithm
                             'IniProbBin', 0.9, 'CrosProbBin', 0.25, 'MutProbBin', 0.5, 'MutProbEachBin', 0.17,...
                             'IniProbInt', 0.5, 'CrosProbInt', 0.0, 'MutProbInt', 0.5,'MutProbEachInt', 0.01,...
                             'IniProbReal', 0.0, 'CrosProbReal', 0.25,'MutProbReal', 0.5, 'MutProbEachReal', 0.14,...
-                            'SeeRules', true, 'SaveRules', '');
+                            'SeeRules', false, 'SaveRules', '');
                           
     end
     

@@ -1,3 +1,4 @@
+% New file for TFG
 classdef TFGFileReadClass
     methods (Static)
         function valid_archive(archive)     

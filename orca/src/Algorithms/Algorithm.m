@@ -1,4 +1,4 @@
-% Modificado para TFG
+% File changed for TFG
 classdef Algorithm < handle
     %ALGORITHM abstract interface class. Abstract class which defines the
     %settings for the algorithms (common methods and variables).
@@ -12,7 +12,7 @@ classdef Algorithm < handle
     
     properties
         model = [];
-        categ = false; % Modificado TFG añadido para saber si permite valores categoricos
+        categ = false; % Changed for TFG: know if categorical is valid 
     end
           
     methods
@@ -68,7 +68,7 @@ classdef Algorithm < handle
             [projectedTrain, predictedTrain] = obj.privfit(train, param);
         end
         
-        % Modificado para TFG
+        % Changed for TFG 
         function [projected, predicted]= predict(obj,test)
         %PREDICT predicts labels of TEST patterns labels using fitted MODEL.
             % Check if there is a model

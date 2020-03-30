@@ -13,8 +13,9 @@
     <!-- ********************** -->
     <target name = "-post-jar">
         <jar jarfile="${dist.jar}" update = "true">
-            <zipfileset src="libraries\JFML-master.jar" excludes="META-INF/*"/>
-            <zipfileset src="libraries\Rule.jar" excludes="META-INF/*"/>
+            <zipfileset src="libraries/JFML-master.jar" excludes="META-INF/*"/>
+            <zipfileset src="libraries/jcommon-1.0.23.jar" excludes="META-INF/*"/>
+            <zipfileset src="libraries/jfreechart-1.0.19.jar" excludes="META-INF/*"/>
             <manifest>
                 <attribute name = "Main-Class" value = "NSLVOrdJava.NSLVOrdJava" />
             </manifest>

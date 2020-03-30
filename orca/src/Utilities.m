@@ -1,3 +1,4 @@
+% File changed for TFG
 classdef Utilities < handle
     %UTILITIES Static class that contains several methods for configurating
     %   and running the experiments. It allows experiments CPU parallelization.
@@ -115,7 +116,7 @@ classdef Utilities < handle
             end
         end
          
-        % Modificado para TFG
+        % Changed for TFG
         function results(experiment_folder,varargin)
             % RESULTS Function for computing the results
             %   RESULTS(EXPERIMENT_FOLDER) computes results of predictions
@@ -395,7 +396,7 @@ classdef Utilities < handle
             
         end
         
-        % Modificado para TFG 
+        % Changed for TFG
         function logsDir = configureExperiment(expFile,dirSuffix)
             % CONFIGUREEXPERIMENT Function for setting the configuration of the
             % 	different experiments.
@@ -548,7 +549,7 @@ classdef Utilities < handle
     
     methods(Static = true, Access = private)
         
-        % Modificado para TFG (añadido parametro de entrada archive)
+        % Changed for TFG (new input parameter 'archive')
         function [trainFileNames, testFileNames] = processDirectory(directory, dataSetNames, archive)
             % PROCESSDIRECTORY Function to get all the train and test pair of
             %   files of dataset's folds
@@ -588,7 +589,7 @@ classdef Utilities < handle
             end
         end
         
-        % Modificado para TFG (añadido parametro de entrada archive)
+        % Changed for TFG (new input parameter 'archive')
         function checkDatasets(basedir, datasets, archive)
             % CHECKDATASETS Test datasets are accessible and with expected
             % names. Launch error in case a dataset is not found.
@@ -616,13 +617,13 @@ classdef Utilities < handle
                 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
                     
                 %dsTrainFiles = dir([basedir '/' dsName '/matlab/train*']); 
-                dsTrainFiles = dir([datasetPath '/train*']); % Modificado TFG 
+                dsTrainFiles = dir([datasetPath '/train*']); % Changed for TFG
                 
                 % Test every train file has a test file
                 for f=1:length(dsTrainFiles)
                     
                     %trainName = [basedir '/' dsName '/matlab/' dsTrainFiles(f).name]; 
-                    trainName = dsTrainFiles(f).name; % Modificado TFG 
+                    trainName = dsTrainFiles(f).name; % Changed for TFG 
                     testName = strrep(trainName, 'train', 'test');
                     
                     %try
