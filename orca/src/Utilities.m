@@ -536,7 +536,7 @@ classdef Utilities < handle
                     for j = 1:size(datas,2)
                         fprintf(fich,string(datas(i,j)) + ' ');
                     end
-                    fprintf(fich,"\n");
+                    fprintf(fich,'\n');
                 end
                 fclose(fich);
             end

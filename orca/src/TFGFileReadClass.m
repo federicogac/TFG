@@ -35,7 +35,7 @@ classdef TFGFileReadClass
     
     methods (Static, Access = private)
         function cols = searchInvalidValue(datas)
-            [fils,cols] = find(isnan(datas) | isinf(datas));
+            [~,cols] = find(isnan(datas) | isinf(datas));
         end
     end
 end

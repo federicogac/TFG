@@ -52,20 +52,16 @@ classdef Experiment < handle
             %   selected)
             %   # Save experiment results for the fold
             obj.process(expFile);
-            k = strfind(expFile,'/');
-            expFile = extractBefore(expFile,k(end));
-            obj.run(expFile);
+            obj.run();
         end
     end
     
     methods(Access = private)
         
-        % Modificado para TFG (añadido fname)
-        function obj = run(obj,fname)
+        function obj = run(obj)
             % RUN do experiment steps: data cleaning and standardization, parameters
             %   optimization and save results
             [train,test] = obj.data.preProcessData(obj.method); %Modificado TFG añadido el parametro obj.method
-            train.folder = fname; %Add on TFG
             
             if obj.crossvalide
                 c1 = clock;
