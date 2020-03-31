@@ -85,7 +85,15 @@ public class NSLVOrdJava {
         tSet = null;
     }
     
+    public static void Prueba() {
+        for(FuzzyLinguisticVariableClass i : fuzzyProblem[0].getFuzzyLinguisticVariableList()){
+            System.out.println(i.getName());
+        }
+        
+    }
+
     public static String[] Train(String[] _header,String[] _datas,String[] args){
+        Attributes.clearAll();
         initParametersTFG(args);
         
         // Aquí se inicializa Random

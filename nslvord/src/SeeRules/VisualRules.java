@@ -6,9 +6,7 @@
 package SeeRules;
 
 import NSLVOrdJava.*;
-//import Rule.Rule;
 import com.sun.glass.events.KeyEvent;
-import java.awt.Color;
 import java.awt.Component;
 import java.util.ArrayList;
 

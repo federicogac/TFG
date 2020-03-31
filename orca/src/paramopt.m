@@ -9,7 +9,33 @@ function optimals = paramopt(alg, param, train, varargin)
 %   OPTIMALS = PARAMOPT(ALG,PARAM,TRAIN,'metric',METRICCLASS, 'nfolds', K, 'seed', S )
 %   uses METRICCLASS as parameters selection critera, K for k-fold, and S 
 %   as base number seed for random number generation.
-            
+        
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                   changed for TFG                    %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Check name and type of parameters
+checkParameters(alg, param);
+
+name_parameters = fieldnames(param);
+nParam = numel(name_parameters);
+sets = struct2cell(param);
+
+c = cell(1, numel(sets));
+[c{:}] = ndgrid( sets{:} );
+combinations = cell2mat( cellfun(@(v)v(:), c, 'UniformOutput',false) );
+combinations = combinations';
+
+% Part add on TFG
+%If only one combination, no need cross-validation
+if size(combinations,2) == 1
+    optimals = param;
+    return;
+end
+% End part add on TFG
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 % Default values for optional parameters
 opt.nfolds = 5;
 opt.metric = MAE;
@@ -25,17 +51,23 @@ else
     end
 end
 
-% Check name and type of parameters
-checkParameters(alg, param);
-
-name_parameters = fieldnames(param);
-nParam = numel(name_parameters);
-sets = struct2cell(param);
-
-c = cell(1, numel(sets));
-[c{:}] = ndgrid( sets{:} );
-combinations = cell2mat( cellfun(@(v)v(:), c, 'UniformOutput',false) );
-combinations = combinations';
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                   changed for TFG                    %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% % Check name and type of parameters
+% checkParameters(alg, param);
+% 
+% name_parameters = fieldnames(param);
+% nParam = numel(name_parameters);
+% sets = struct2cell(param);
+% 
+% c = cell(1, numel(sets));
+% [c{:}] = ndgrid( sets{:} );
+% combinations = cell2mat( cellfun(@(v)v(:), c, 'UniformOutput',false) );
+% combinations = combinations';
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Avoid problems with very low number of patterns for some
 % classes

@@ -8,7 +8,7 @@ classdef NSLVOrd < Algorithm
                             'IniProbBin', 0.9, 'CrosProbBin', 0.25, 'MutProbBin', 0.5, 'MutProbEachBin', 0.17,...
                             'IniProbInt', 0.5, 'CrosProbInt', 0.0, 'MutProbInt', 0.5,'MutProbEachInt', 0.01,...
                             'IniProbReal', 0.0, 'CrosProbReal', 0.25,'MutProbReal', 0.5, 'MutProbEachReal', 0.14,...
-                            'SeeRules', false, 'SaveRules', '');
+                            'SeeRules', 0);
                           
     end
     
@@ -118,7 +118,7 @@ classdef NSLVOrd < Algorithm
         function [projectedTrain, predictedTrain] = privfit(obj, train, param)
             % fit the model and return prediction of train set. It is called by
             % super class Algorithm.fit() method.
-            
+                
             % Convertir los datos a objetos Java
             param_java = obj.initParameters(param);
             
@@ -129,10 +129,18 @@ classdef NSLVOrd < Algorithm
             datas = obj.getDatas(datas);
             
             % Do train
-            import NSLVOrdJava.*;
-            JavaClass = NSLVOrdJava;
-            result = JavaClass.Train(header,datas,param_java);
-            
+            try
+                import NSLVOrdJava.*;
+                JavaClass = NSLVOrdJava;
+                result = JavaClass.Train(header,datas,param_java);
+                fuzzyProblem = JavaClass.GetFuzzyProblem();
+                rules = JavaClass.GetRules();
+            catch ME
+                % Delete
+                clear NSLVOrdJava;
+                error(ME.message)
+            end
+                
             % Process output
             targets = obj.ConvertCategoricToTargets(result,train.info.personal.attrs(end).info);
             projectedTrain = targets; 
@@ -143,8 +151,8 @@ classdef NSLVOrd < Algorithm
                 model.name = train.name;
             catch
             end
-            model.fuzzyProblem = JavaClass.GetFuzzyProblem();
-            model.rules = JavaClass.GetRules();
+            model.fuzzyProblem = fuzzyProblem;
+            model.rules = rules;
             model.outPutsClass = train.info.personal.attrs(end).info;
             model.parameters = param;
             obj.model = model;
@@ -152,17 +160,9 @@ classdef NSLVOrd < Algorithm
             % Delete
             clear NSLVOrdJava;
             
-            try % If is cross-validation mode, no need see or save rules (no exist obj.model.name and there is an error)
-                % See rules
-                if param.SeeRules
-                    obj.visual_rules();
-                end
-
-                % Save rules
-                if ~strcmp(param.SaveRules,'')
-                    obj.save_rules(param.SaveRules);
-                end
-            catch
+            % See rules
+            if param.SeeRules
+                obj.visual_rules();
             end
         end
         
@@ -178,10 +178,16 @@ classdef NSLVOrd < Algorithm
             datas = obj.getDatas(datas);
             
             % Do test
-            import NSLVOrdJava.*;
-            JavaClass = NSLVOrdJava;
-            JavaClass.LoadModel(obj.model.fuzzyProblem,obj.model.rules);
-            result = JavaClass.Test(datas);
+            try
+                import NSLVOrdJava.*;
+                JavaClass = NSLVOrdJava;
+                JavaClass.LoadModel(obj.model.fuzzyProblem,obj.model.rules);
+                result = JavaClass.Test(datas);
+            catch ME
+                % Delete
+                clear NSLVOrdJava;
+                error(ME.message)
+            end
             
             % Procesar salidas
             targets = obj.ConvertCategoricToTargets(result,obj.model.outPutsClass);
@@ -194,19 +200,30 @@ classdef NSLVOrd < Algorithm
         
         function visual_rules(obj)
             % See Rules
-            import NSLVOrdJava.*;
-            JavaClass = NSLVOrdJava;
-            JavaClass.LoadModel(obj.model.fuzzyProblem,obj.model.rules);
-            JavaClass.SeeRules(obj.model.name);
+            try
+                s
+                import NSLVOrdJava.*;
+                JavaClass = NSLVOrdJava;
+                JavaClass.LoadModel(obj.model.fuzzyProblem,obj.model.rules);
+                JavaClass.SeeRules(obj.model.name);
+            catch ME
+                clear NSLVOrdJava;
+                error(ME.message);
+            end
             clear NSLVOrdJava;
         end
         
         function save_rules(obj,dir)
             % Crear JFML y PMML
-            import NSLVOrdJava.*;
-            JavaClass = NSLVOrdJava;
-            JavaClass.LoadModel(obj.model.fuzzyProblem,obj.model.rules);
-            JavaClass.XMLFile(dir,obj.model.name);
+            try
+                import NSLVOrdJava.*;
+                JavaClass = NSLVOrdJava;
+                JavaClass.LoadModel(obj.model.fuzzyProblem,obj.model.rules);
+                JavaClass.XMLFile(dir,obj.model.name);
+            catch ME
+                clear NSLVOrdJava;
+                error(ME.message);
+            end
             clear NSLVOrdJava;
         end
     end
