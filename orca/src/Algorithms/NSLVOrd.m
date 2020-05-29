@@ -14,30 +14,30 @@ classdef NSLVOrd < Algorithm
     
     methods (Access = private, Static)
         function param_java = initParameters(param)
-            param_java = [...
-                java.lang.String(num2str(param.Seed)),...
-                java.lang.String(num2str(param.LabelsInputs)),...
-                java.lang.String(num2str(param.LabelsOutputs)),...
-                java.lang.String(num2str(param.Shift)),...
-                java.lang.String(num2str(param.Alpha)),...
-                java.lang.String(num2str(param.Population)),...
-                java.lang.String(num2str(param.MaxIteration)),...
-                java.lang.String(num2str(param.IniProbBin)),...
-                java.lang.String(num2str(param.CrosProbBin)),...
-                java.lang.String(num2str(param.MutProbBin)),...
-                java.lang.String(num2str(param.MutProbEachBin)),...
-                java.lang.String(num2str(param.IniProbInt)),...
-                java.lang.String(num2str(param.CrosProbInt)),...
-                java.lang.String(num2str(param.MutProbInt)),...
-                java.lang.String(num2str(param.MutProbEachInt)),...
-                java.lang.String(num2str(param.IniProbReal)),...
-                java.lang.String(num2str(param.CrosProbReal)),...
-                java.lang.String(num2str(param.MutProbReal)),...
-                java.lang.String(num2str(param.MutProbEachReal))];
+            param_java = {...
+                num2str(param.Seed),...
+                num2str(param.LabelsInputs),...
+                num2str(param.LabelsOutputs),...
+                num2str(param.Shift),...
+                num2str(param.Alpha),...
+                num2str(param.Population),...
+                num2str(param.MaxIteration),...
+                num2str(param.IniProbBin),...
+                num2str(param.CrosProbBin),...
+                num2str(param.MutProbBin),...
+                num2str(param.MutProbEachBin),...
+                num2str(param.IniProbInt),...
+                num2str(param.CrosProbInt),...
+                num2str(param.MutProbInt),...
+                num2str(param.MutProbEachInt),...
+                num2str(param.IniProbReal),...
+                num2str(param.CrosProbReal),...
+                num2str(param.MutProbReal),...
+                num2str(param.MutProbEachReal)};
         end
     
         function header = getHeader(datas)
-            header = java.lang.String('@relation NSLVOrd');
+            header = '@relation NSLVOrd';
             if strcmp(datas.info.utilities.type,'weka')
                 for i = 1:length(datas.info.personal.attrs)-1
                     line = strcat('@attribute',{' '},datas.info.personal.attrs(i).name,{' '});
@@ -52,7 +52,7 @@ classdef NSLVOrd < Algorithm
                     else
                         error('error');
                     end
-                    header = [header;java.lang.String(line)];
+                    header = [header;line];
                 end
                 
                 line = strcat('@attribute',{' '},datas.info.personal.attrs(end).name,{' '});
@@ -61,17 +61,17 @@ classdef NSLVOrd < Algorithm
                     line = strcat(line,',',datas.info.personal.attrs(end).info.cat(j));
                 end
                 line = strcat(line,'}');
-                header = [header;java.lang.String(line)];
+                header = [header;line];
                 
             else
                 for i = 1:size(datas.patterns,2)
                     line = strcat('@attribute x',int2str(i),' numeric');
-                    header = [header;java.lang.String(line)];
+                    header = [header;line];
                 end
                 line = '@attribute y numeric';
-                header = [header;java.lang.String(line)];
+                header = [header;line];
             end
-            header = [header;java.lang.String('@data')];
+            header = [header;'@data'];
         end
         
         function datas_java = getDatas(datas)
@@ -83,7 +83,7 @@ classdef NSLVOrd < Algorithm
                     aux = strcat(aux,datas(i,j),',');
                 end
                 aux = strcat(aux,datas(i,b));
-                datas_java = [datas_java;java.lang.String(aux)];
+                datas_java = [datas_java;aux];
             end
         end
     
@@ -96,10 +96,57 @@ classdef NSLVOrd < Algorithm
         end
     
         function targets = ConvertCategoricToTargets(result,trans)
-            result_m = repmat(char(result),1,length(trans.cat));
+            result = char(result);
+            if iscell(result)
+                result = cell2mat(result);
+            end
+            result_m = repmat(result,1,length(trans.cat));
             cat_m = repmat(char(trans.cat)',length(result),1);
             a = (result_m == cat_m) * [1:length(trans.cat)]';
             targets = trans.num(a)';
+        end
+        
+        function res = toChar(param)
+           	res = [];
+            for i = 1:size(param,1)
+                a1 = param(i);
+                res1 = [];
+                for j = 1:size(a1,1)
+                    a2 = a1(j);
+                    res2 = [];
+                    for k = 1:size(a2,1)
+                        a3 = char(a2(k));
+                        res2 = [res2,{a3}];
+                    end
+                    res1 = [res1;{res2}];
+                end
+                res = [res;{res1}];
+            end
+        end
+        
+        function res = toCell(param)
+            res = [];
+            for i = 1:size(param,1)
+                res = [res;{char(param(i))}];
+            end
+        end
+        
+        function res = toJavaString(param)
+            res = javaArray('java.lang.String[][]',size(param,1));
+            for i = 1:size(param,1)
+                a1 = param{i};
+                res1 = [];
+                for j = 1:size(a1,1)
+                    a2 = a1{j};
+                    res2 = [];
+                    for k = 1:size(a2,2)
+                        a3 = java.lang.String(a2{k});
+                        res2 = [res2,a3];
+                    end
+                    res1 = [res1;res2];
+                end
+                res(i) = [res1;[]];
+            end
         end
     end
    
@@ -109,10 +156,6 @@ classdef NSLVOrd < Algorithm
             obj.parseArgs(varargin);
             
             obj.categ = true;
-            
-            algorithmPath = fullfile(fileparts(which('Algorithm.m')),'NSLVOrd');
-            jarfolder = fullfile(algorithmPath,'NSLVOrdJava.jar');
-            javaaddpath(jarfolder);
         end
         
         function [projectedTrain, predictedTrain] = privfit(obj, train, param)
@@ -128,18 +171,19 @@ classdef NSLVOrd < Algorithm
             datas = [train.patterns targets];
             datas = obj.getDatas(datas);
             
-            % Do train
-            try
-                import NSLVOrdJava.*;
-                JavaClass = NSLVOrdJava;
-                result = JavaClass.Train(header,datas,param_java);
-                fuzzyProblem = JavaClass.GetFuzzyProblem();
-                rules = JavaClass.GetRules();
-            catch ME
-                % Delete
-                clear NSLVOrdJava;
-                error(ME.message)
-            end
+            % NSLVOrd Java
+            algorithmPath = fullfile(fileparts(which('Algorithm.m')),'NSLVOrd');
+            jarfolder = fullfile(algorithmPath,'NSLVOrdJava.jar');
+            javaaddpath(jarfolder);
+            
+            nslvord = javaObject('NSLVOrdJava.NSLVOrdJava');
+            result = javaMethod('Train', nslvord, header,datas,param_java);
+            knowledgebase = javaMethod('get_knowledge_base', nslvord);
+            rulebase = javaMethod('get_rule_base', nslvord);
+            rules = javaMethod('get_rules', nslvord);
+            
+            clear nslvord;
+            javarmpath(jarfolder);
                 
             % Process output
             targets = obj.ConvertCategoricToTargets(result,train.info.personal.attrs(end).info);
@@ -151,14 +195,14 @@ classdef NSLVOrd < Algorithm
                 model.name = train.name;
             catch
             end
-            model.fuzzyProblem = fuzzyProblem;
-            model.rules = rules;
+            %wres = obj.toCharkiko(knowledgebase)
+            model.knowledgebase =  obj.toCell(knowledgebase);
+            model.rulebase = obj.toCell(rulebase);
+            model.rules = obj.toCell(rules);
             model.outPutsClass = train.info.personal.attrs(end).info;
+            model.header = header;
             model.parameters = param;
             obj.model = model;
-            
-            % Delete
-            clear NSLVOrdJava;
             
             % See rules
             if param.SeeRules
@@ -177,54 +221,152 @@ classdef NSLVOrd < Algorithm
             datas = [patterns targets];
             datas = obj.getDatas(datas);
             
-            % Do test
-            try
-                import NSLVOrdJava.*;
-                JavaClass = NSLVOrdJava;
-                JavaClass.LoadModel(obj.model.fuzzyProblem,obj.model.rules);
-                result = JavaClass.Test(datas);
-            catch ME
-                % Delete
-                clear NSLVOrdJava;
-                error(ME.message)
-            end
+            % NSLVOrd Java
+            algorithmPath = fullfile(fileparts(which('Algorithm.m')),'NSLVOrd');
+            jarfolder = fullfile(algorithmPath,'NSLVOrdJava.jar');
+            javaaddpath(jarfolder);
+            
+            nslvord = javaObject('NSLVOrdJava.NSLVOrdJava');
+            javaMethod('LoadModel', nslvord, obj.model.knowledgebase,obj.model.rulebase);
+            result = javaMethod('Test', nslvord, obj.model.header,datas);
+            
+            clear nslvord;
+            javarmpath(jarfolder);
             
             % Procesar salidas
             targets = obj.ConvertCategoricToTargets(result,obj.model.outPutsClass);
             projected = targets;
             predicted = targets;
-            
-            % Delete
-            clear NSLVOrdJava;
         end
         
         function visual_rules(obj)
-            % See Rules
-            try
-                s
-                import NSLVOrdJava.*;
-                JavaClass = NSLVOrdJava;
-                JavaClass.LoadModel(obj.model.fuzzyProblem,obj.model.rules);
-                JavaClass.SeeRules(obj.model.name);
-            catch ME
-                clear NSLVOrdJava;
-                error(ME.message);
+            visual = RulesVisual;
+            
+            % RuleBase
+            rb = obj.model.rules;
+            numr = str2num(rb{1});
+            finr = 1;
+            % Rule
+            for i = 1:numr
+                inir = finr + 1;
+                finr = inir + 2 + str2num(rb{inir + 2});
+                r = rb(inir:finr);
+                rname = r{1};
+                rweight = str2double(r{2});
+                numant = str2num(r{4}) - 1;
+                con = r(end-1:end);
+                ant = getant(obj,r(5:end-2),numant);
+                visual.new_rule(rname,rweight);
+                for j = 1:size(ant,1)
+                    visual.add_antecedent(ant(j).name,ant(j).values);
+                end
+                visual.new_consequent(con{1},con{2});
             end
-            clear NSLVOrdJava;
+            
+            % Visual
+            visual.visual_rules(obj.model.name);
         end
         
-        function save_rules(obj,dir)
-            % Crear JFML y PMML
-            try
-                import NSLVOrdJava.*;
-                JavaClass = NSLVOrdJava;
-                JavaClass.LoadModel(obj.model.fuzzyProblem,obj.model.rules);
-                JavaClass.XMLFile(dir,obj.model.name);
-            catch ME
-                clear NSLVOrdJava;
-                error(ME.message);
+        function export_rules(obj,dir)
+            export = RulesExport;
+            
+            % KnowledgeBase
+            kb = obj.model.knowledgebase;
+            numfv = str2num(kb{5});
+            finfv = 5;
+            % FuzzyVariable
+            for i = 1:numfv
+                inifv = finfv + 1;
+                numft = str2num(kb{inifv + 8});
+                finfv = inifv + 8 + 7 * numft;
+                fv = kb(inifv:finfv);
+                export.new_variable(fv{1},fv{5},fv{6});
+                finft = 9;
+                % FuzzyTerm
+                for j = 1:numft
+                    inift = finft + 1;
+                    finft = inift + 6;
+                    ft = fv(inift:finft);
+                    export.add_terms(ft{1},ft{2},ft{3},ft{4},ft{5});
+                end
             end
-            clear NSLVOrdJava;
+            
+            % RuleBase
+            rb = obj.model.rules;
+            numr = str2num(rb{1});
+            finr = 1;
+            % Rule
+            for i = 1:numr
+                inir = finr + 1;
+                finr = inir + 2 + str2num(rb{inir + 2});
+                r = rb(inir:finr);
+                rname = r{1};
+                rweight = str2double(r{2});
+                numant = str2num(r{4}) - 1;
+                con = r(end-1:end);
+                ant = subrules(obj,r(5:end-2),numant);
+                for j = 1:size(ant,1)
+                    acname = rname;
+                    if size(ant,1) > 1
+                        acname = [rname '_' num2str(j)];
+                    end
+                    export.new_rule(acname,rweight);
+                    antr = ant{j};
+                    for k = 1:2:size(antr,2)
+                        export.add_antecedent(antr{k},antr{k+1});
+                    end
+                    export.new_consequent(con{1},con{2});
+                end
+            end
+            
+            % Export
+            export.export_rules(dir,obj.model.name);
+        end
+        
+        function ant = subrules(obj,r,numant)
+            [ant_aux,comb] = obj.getant(r,numant);
+            ant = [];
+            if ~isempty(ant_aux)
+                ant = cell(comb,1);
+                for i = 1:comb
+                    start = comb;
+                    index = i;
+                    for j = 1:size(ant_aux,1)
+                        aux = ant_aux(j);
+                        name = aux.name;
+                        aux = aux.values;
+                        start = start / size(aux,1);
+                        value = aux{floor((index-1)/start) + 1};
+                        index = index - start * floor((index-1)/start);
+                        ant{i} = [ant{i},{name},{value}];
+                    end
+                end
+            end
+        end
+        
+        function [ant,comb] = getant(obj,r,numant)
+            ant = [];
+            fin = 0;
+            comb = 1;
+            for i = 1:numant
+                ini = fin + 1;
+                aux.name = r{ini};
+                numval = str2num(r{ini+1});
+                fin = ini + 1 + numval * 7;
+                vr = r(ini:fin);
+                values = [];
+                finv = 2;
+                comb = comb * numval;
+                for j = 1:numval
+                    iniv = finv + 1;
+                    finv = iniv + 6;
+                    tr = vr(iniv:finv);
+                    aux2 = {tr{1},str2double(tr{2}),str2double(tr{3}),str2double(tr{4}),str2double(tr{5}),str2num(tr{6}),str2num(tr{7})};
+                    values = [values;aux2];
+                end
+                aux.values = values;
+                ant = [ant;aux];
+            end
         end
     end
 end

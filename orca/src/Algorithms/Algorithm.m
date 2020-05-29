@@ -213,7 +213,6 @@ classdef Algorithm < handle
                 name_parameters = [];
             end
         end
-        
     end
     
 end

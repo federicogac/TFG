@@ -63,7 +63,7 @@ public class NSLVOrdJava {
     
     static String configFile = null;
     static String[] poblationParam;
-    
+    /*
     public static void SeeRules(String name){
         VisualRules lista = new VisualRules(fuzzyProblem[0], R[0]);
         lista.SeeRules(name);
@@ -91,7 +91,7 @@ public class NSLVOrdJava {
         }
         
     }
-
+*/
     public static String[] Train(String[] _header,String[] _datas,String[] args){
         Attributes.clearAll();
         initParametersTFG(args);
@@ -127,13 +127,356 @@ public class NSLVOrdJava {
         return fuzzyProblem;
     }
     
-    public static RuleSetClass[] GetRules(){
-        return R;
+    public static String[] get_knowledge_base(){
+        XML _xml = new XML(fuzzyProblem[0], R[0]);
+        String[] kb = _xml.Export_KnowledgeBase();
+        return kb;
     }
     
+    public static String[] get_rules(){
+        XML _xml = new XML(fuzzyProblem[0], R[0]);
+        String[] rules = _xml.Export_Rules();
+        return rules;
+    }
+    
+    public static String[] get_rule_base(){
+        XML _xml = new XML(fuzzyProblem[0], R[0]);
+        String[]  rb = _xml.Export_RuleBase();
+        return rb;
+    }
+    /*
     public static void LoadModel(FuzzyProblemClass[] _fuzzyProblem, RuleSetClass[] _R){
         fuzzyProblem = _fuzzyProblem;
         R = _R;
+    }
+    */
+    public static void LoadModel(String[] _fuzzyProblem,String[] _R){
+        fuzzyProblem = new FuzzyProblemClass[numDesplazamientos];
+        R= new RuleSetClass[numDesplazamientos];
+        E_par_test= new ExampleSetProcess[numDesplazamientos];
+        
+        Load_KnowledgeBase(_fuzzyProblem);
+        Load_RuleBase(_R);
+    }
+     
+    public static void Load_KnowledgeBase(String[] sfp){
+        // FUZZY PROBLEM
+        FuzzyProblemClass fp = new FuzzyProblemClass();
+        fp.setConsequentIndexOriginal(Integer.parseInt(sfp[0]));
+        fp.setShift(Integer.parseInt(sfp[1]));
+        fp.setDirection(Integer.parseInt(sfp[2]));
+        fp.setHomogeneousLabel(Integer.parseInt(sfp[3]));
+        fp.setFuzzyLinguisticVariableNum(Integer.parseInt(sfp[4]));
+        
+        // FUZZY VARIABLE
+        FuzzyLinguisticVariableClass[] fv = new FuzzyLinguisticVariableClass[fp.getFuzzyLinguisticVariableNum()];
+        int pos = 5;
+        for(int i = 0; i < fp.getFuzzyLinguisticVariableNum(); i++){
+            fv[i] = new FuzzyLinguisticVariableClass();
+            fv[i].setName(sfp[pos]); pos++;
+            fv[i].setUnit(Integer.parseInt(sfp[pos])); pos++;
+            fv[i].setNumTermAutomatic(Double.parseDouble(sfp[pos])); pos++;
+            fv[i].setVariableType(Integer.parseInt(sfp[pos])); pos++;
+            fv[i].setInfRange(Double.parseDouble(sfp[pos])); pos++;
+            fv[i].setSupRange(Double.parseDouble(sfp[pos])); pos++;
+            fv[i].setInfRangeIsInf(Integer.parseInt(sfp[pos])); pos++;
+            fv[i].setSupRangeIsInf(Integer.parseInt(sfp[pos])); pos++;
+            fv[i].setFuzzyLinguisticTermNum(Integer.parseInt(sfp[pos])); pos++;
+            
+            // FUZZY TERM
+            FuzzyLinguisticTermClass[] ft = new FuzzyLinguisticTermClass[fv[i].getFuzzyLinguisticTermNum()];
+            for(int j = 0; j < fv[i].getFuzzyLinguisticTermNum(); j++){
+                ft[j] = new FuzzyLinguisticTermClass();
+                ft[j].setName(sfp[pos]); pos++;
+                ft[j].setA(Double.parseDouble(sfp[pos])); pos++;
+                ft[j].setB(Double.parseDouble(sfp[pos])); pos++;
+                ft[j].setC(Double.parseDouble(sfp[pos])); pos++;
+                ft[j].setD(Double.parseDouble(sfp[pos])); pos++;
+                ft[j].setAbInf(Integer.parseInt(sfp[pos])); pos++;
+                ft[j].setCdInf(Integer.parseInt(sfp[pos])); pos++;
+            }
+            
+            fv[i].setFuzzyLinguisticTermList(ft);
+        }
+        
+        fp.setFuzzyLinguisticVariableList(fv);
+        
+        fuzzyProblem[0] = fp;
+    }
+    /*
+    public static void Load_KnowledgeBase_ant(String[][][] sfp){
+        // FUZZY PROBLEM
+        FuzzyProblemClass fp = new FuzzyProblemClass();
+        fp.setFuzzyLinguisticVariableNum(Integer.parseInt(sfp[0][0][0]));
+        fp.setConsequentIndexOriginal(Integer.parseInt(sfp[0][0][1]));
+        fp.setShift(Integer.parseInt(sfp[0][0][2]));
+        fp.setDirection(Integer.parseInt(sfp[0][0][3]));
+        fp.setHomogeneousLabel(Integer.parseInt(sfp[0][0][4]));
+        
+        // FUZZY VARIABLE
+        FuzzyLinguisticVariableClass[] fv = new FuzzyLinguisticVariableClass[fp.getFuzzyLinguisticVariableNum()];
+        for(int i = 0; i < fp.getFuzzyLinguisticVariableNum(); i++){
+            String[] aux = sfp[i+1][0];
+            fv[i] = new FuzzyLinguisticVariableClass();
+            fv[i].setName(aux[0]);
+            fv[i].setInfRange(Double.parseDouble(aux[1]));
+            fv[i].setSupRange(Double.parseDouble(aux[2]));
+            fv[i].setInfRangeIsInf(Integer.parseInt(aux[3]));
+            fv[i].setSupRangeIsInf(Integer.parseInt(aux[4]));
+            fv[i].setUnit(Integer.parseInt(aux[5]));
+            fv[i].setNumTermAutomatic(Double.parseDouble(aux[6]));
+            fv[i].setVariableType(Integer.parseInt(aux[7]));
+            fv[i].setFuzzyLinguisticTermNum(Integer.parseInt(aux[8]));
+            
+            // FUZZY TERM
+            FuzzyLinguisticTermClass[] ft = new FuzzyLinguisticTermClass[fv[i].getFuzzyLinguisticTermNum()];
+            for(int j = 0; j < fv[i].getFuzzyLinguisticTermNum(); j++){
+                aux = sfp[i+1][j+1];
+                ft[j] = new FuzzyLinguisticTermClass();
+                ft[j].setName(aux[0]);
+                ft[j].setA(Double.parseDouble(aux[1]));
+                ft[j].setB(Double.parseDouble(aux[2]));
+                ft[j].setC(Double.parseDouble(aux[3]));
+                ft[j].setD(Double.parseDouble(aux[4]));
+                ft[j].setAbInf(Integer.parseInt(aux[5]));
+                ft[j].setCdInf(Integer.parseInt(aux[6]));
+            }
+            
+            fv[i].setFuzzyLinguisticTermList(ft);
+        }
+        
+        fp.setFuzzyLinguisticVariableList(fv);
+        
+        fuzzyProblem[0] = fp;
+    }
+    */
+    public static void Load_RuleBase(String[] srs){
+        // RULE SET
+        RuleSetClass rs = new RuleSetClass();
+        rs.setNumRules(Integer.parseInt(srs[0]));
+        rs.CCR = Double.parseDouble(srs[1]);
+        rs.SM = Double.parseDouble(srs[2]);
+        rs.TPR = Double.parseDouble(srs[3]);
+        rs.TNR = Double.parseDouble(srs[4]);
+        rs.FPR = Double.parseDouble(srs[5]);
+        rs.Kappa = Double.parseDouble(srs[6]);
+        rs.AUC = Double.parseDouble(srs[7]);
+        rs.MSE = Double.parseDouble(srs[8]);
+        rs.RMSE = Double.parseDouble(srs[9]);
+        rs.RMAE = Double.parseDouble(srs[10]);
+        rs.OMAE = Double.parseDouble(srs[11]);
+        rs.OMAENormalizado = Double.parseDouble(srs[12]);
+        rs.MMAE = Double.parseDouble(srs[13]);
+        rs.mMAE = Double.parseDouble(srs[14]);
+        rs.AMAE = Double.parseDouble(srs[15]);
+        rs.Spearman = Double.parseDouble(srs[16]);
+        rs.Kendall = Double.parseDouble(srs[17]);
+        rs.OC = Double.parseDouble(srs[18]);
+        rs.beta = Double.parseDouble(srs[19]);
+        rs.metric = Double.parseDouble(srs[20]);
+        rs.metricMedia = Double.parseDouble(srs[21]);
+        rs.Precision = Double.parseDouble(srs[22]);
+        rs.alphaMetric = Double.parseDouble(srs[23]);
+        rs.confusion = new double[Integer.parseInt(srs[24])][];
+        int pos = 25;
+        for(int i = 0; i < rs.confusion.length; i++){
+            rs.confusion[i] = new double[Integer.parseInt(srs[pos])]; pos++;
+            for(int j = 0; j < rs.confusion[i].length; j++){
+                rs.confusion[i][j] = Double.parseDouble(srs[pos]); pos++;
+            }
+        }
+        
+        // RULE
+        GenetCodeClass[] rul = new GenetCodeClass[rs.getNumRules()];
+        for(int i = 0; i < rul.length; i++){
+            // Binary elements
+            int binaryBlocs;
+            int[] sizeBinaryBlocs;
+            int[][] binaryMatrix;
+            binaryBlocs = Integer.parseInt(srs[pos]); pos++;
+            sizeBinaryBlocs = new int[binaryBlocs];
+            binaryMatrix = new int[binaryBlocs][];
+            for(int j = 0; j < binaryBlocs; j++){
+                sizeBinaryBlocs[j] = Integer.parseInt(srs[pos]); pos++;
+                binaryMatrix[j] = new int[sizeBinaryBlocs[j]];
+                for(int k = 0; k < sizeBinaryBlocs[j]; k++){
+                    binaryMatrix[j][k] = Integer.parseInt(srs[pos]); pos++;
+                }
+            }
+            
+            // Integer elements
+            int integerBlocs;
+            int[] sizeIntegerBlocs;
+            int[][] integerMatrix;
+            int[] integerRange;
+            integerBlocs = Integer.parseInt(srs[pos]); pos++;
+            sizeIntegerBlocs = new int[integerBlocs];
+            integerMatrix = new int[integerBlocs][];
+            for(int j = 0; j < integerBlocs; j++){
+                sizeIntegerBlocs[j] = Integer.parseInt(srs[pos]); pos++;
+                integerMatrix[j] = new int[sizeIntegerBlocs[j]];
+                for(int k = 0; k < sizeIntegerBlocs[j]; k++){
+                    integerMatrix[j][k] = Integer.parseInt(srs[pos]); pos++;
+                }
+            }
+            integerRange = new int[Integer.parseInt(srs[pos])]; pos++;
+            for(int j = 0; j < integerRange.length; j++){
+                integerRange[j] = Integer.parseInt(srs[pos]); pos++;
+            }
+            
+            // Real elements
+            int realBlocs;
+            int[] sizeRealBlocs;
+            double[][] realMatrix;
+            double[] realInfRange;
+            double[] realSupRange;
+            realBlocs = Integer.parseInt(srs[pos]); pos++;
+            sizeRealBlocs = new int[realBlocs];
+            realMatrix = new double[realBlocs][];
+            for(int j = 0; j < realBlocs; j++){
+                sizeRealBlocs[j] = Integer.parseInt(srs[pos]); pos++;
+                realMatrix[j] = new double[sizeRealBlocs[j]];
+                for(int k = 0; k < sizeRealBlocs[j]; k++){
+                    realMatrix[j][k] = Double.parseDouble(srs[pos]); pos++;
+                }
+            }
+            realInfRange = new double[Integer.parseInt(srs[pos])]; pos++;
+            for(int j = 0; j < realInfRange.length; j++){
+               realInfRange[j] = Double.parseDouble(srs[pos]); pos++;
+            }
+            realSupRange = new double[Integer.parseInt(srs[pos])]; pos++;
+            for(int j = 0; j < realSupRange.length; j++){
+                realSupRange[j] = Double.parseDouble(srs[pos]); pos++;
+            }
+            
+            
+            rul[i] = new GenetCodeClass(binaryBlocs,integerBlocs,realBlocs, 
+                       sizeBinaryBlocs,sizeIntegerBlocs,sizeRealBlocs,
+                       integerRange,realInfRange,realSupRange);
+            rul[i].setBinaryMatrix(binaryMatrix);
+            rul[i].setIntegerMatrix(integerMatrix);
+            rul[i].setRealMatrix(realMatrix);
+        }
+        rs.setRules(rul);
+        
+        R[0] = rs;
+    }
+    /*
+    public static void Load_RuleBase_ant(String[][][][] srs){
+        // RULE SET
+        RuleSetClass rs = new RuleSetClass();
+        int num = Integer.parseInt(srs[0][0][0][0]);
+        rs.setNumRules(num);
+        rs.CCR = Double.parseDouble(srs[0][0][0][1]);
+        rs.SM = Double.parseDouble(srs[0][0][0][2]);
+        rs.TPR = Double.parseDouble(srs[0][0][0][3]);
+        rs.TNR = Double.parseDouble(srs[0][0][0][4]);
+        rs.FPR = Double.parseDouble(srs[0][0][0][5]);
+        rs.Kappa = Double.parseDouble(srs[0][0][0][6]);
+        rs.AUC = Double.parseDouble(srs[0][0][0][7]);
+        rs.MSE = Double.parseDouble(srs[0][0][0][8]);
+        rs.RMSE = Double.parseDouble(srs[0][0][0][9]);
+        rs.RMAE = Double.parseDouble(srs[0][0][0][10]);
+        rs.OMAE = Double.parseDouble(srs[0][0][0][11]);
+        rs.OMAENormalizado = Double.parseDouble(srs[0][0][0][12]);
+        rs.MMAE = Double.parseDouble(srs[0][0][0][13]);
+        rs.mMAE = Double.parseDouble(srs[0][0][0][14]);
+        rs.AMAE = Double.parseDouble(srs[0][0][0][15]);
+        rs.Spearman = Double.parseDouble(srs[0][0][0][16]);
+        rs.Kendall = Double.parseDouble(srs[0][0][0][17]);
+        rs.OC = Double.parseDouble(srs[0][0][0][18]);
+        rs.beta = Double.parseDouble(srs[0][0][0][19]);
+        rs.metric = Double.parseDouble(srs[0][0][0][20]);
+        rs.metricMedia = Double.parseDouble(srs[0][0][0][21]);
+        rs.Precision = Double.parseDouble(srs[0][0][0][22]);
+        rs.alphaMetric = Double.parseDouble(srs[0][0][0][23]);
+        rs.confusion = new double[srs[0][1].length][];
+        for(int i = 0; i < srs[0][1].length; i++){
+            rs.confusion[i] = new double[srs[0][1][i].length];
+            for(int j = 0; j < srs[0][1][i].length; j++){
+                rs.confusion[i][j] = Double.parseDouble(srs[0][1][i][j]);
+            }
+        }
+        
+        // RULE
+        GenetCodeClass[] rul = new GenetCodeClass[num];
+        for(int i = 1; i <= num; i++){
+            int aux = i-1;
+            int row,col;
+            
+            // Binary elements
+            int binaryBlocs;
+            int[] sizeBinaryBlocs;
+            int[][] binaryMatrix;
+            binaryBlocs = row = Integer.parseInt(srs[i][0][0][0]);
+            sizeBinaryBlocs = new int[row];
+            binaryMatrix = new int[row][];
+            for(int j = 0; j < row; j++){
+                sizeBinaryBlocs[j] = col = Integer.parseInt(srs[i][0][1][j]);
+                binaryMatrix[j] = new int[col];
+                for(int k = 0; k < col; k++){
+                    binaryMatrix[j][k] = Integer.parseInt(srs[i][1][j][k]);
+                }
+            }
+            
+            // Integer elements
+            int integerBlocs;
+            int[] sizeIntegerBlocs;
+            int[][] integerMatrix;
+            int[] integerRange;
+            integerBlocs = row = Integer.parseInt(srs[i][0][0][1]);
+            sizeIntegerBlocs = new int[row];
+            integerMatrix = new int[row][];
+            for(int j = 0; j < row; j++){
+                sizeIntegerBlocs[j] = col = Integer.parseInt(srs[i][0][2][j]);
+                integerMatrix[j] = new int[col];
+                for(int k = 0; k < col; k++){
+                    integerMatrix[j][k] = Integer.parseInt(srs[i][2][j][k]);
+                }
+            }
+            row = srs[i][0][4].length;
+            integerRange = new int[row];
+            for(int j = 0; j < row; j++){
+                integerRange[j] = Integer.parseInt(srs[i][0][4][j]);
+            }
+            
+            // Real elements
+            int realBlocs;
+            int[] sizeRealBlocs;
+            double[][] realMatrix;
+            double[] realInfRange;
+            double[] realSupRange;
+            realBlocs = row = Integer.parseInt(srs[i][0][0][2]);
+            sizeRealBlocs = new int[row];
+            realMatrix = new double[row][];
+            for(int j = 0; j < row; j++){
+                sizeRealBlocs[j] = col = Integer.parseInt(srs[i][0][3][j]);
+                realMatrix[j] = new double[col];
+                for(int k = 0; k < col; k++){
+                    realMatrix[j][k] = Double.parseDouble(srs[i][3][j][k]);
+                }
+            }
+            row = srs[i][0][5].length;
+            realInfRange = new double[row];
+            for(int j = 0; j < row; j++){
+                realInfRange[j] = Double.parseDouble(srs[i][0][5][j]);
+            }
+            row = srs[i][0][6].length;
+            realSupRange = new double[row];
+            for(int j = 0; j < row; j++){
+                realSupRange[j] = Double.parseDouble(srs[i][0][6][j]);
+            }
+            
+            rul[aux] = new GenetCodeClass(binaryBlocs,integerBlocs,realBlocs, 
+                       sizeBinaryBlocs,sizeIntegerBlocs,sizeRealBlocs,
+                       integerRange,realInfRange,realSupRange);
+            rul[aux].setBinaryMatrix(binaryMatrix);
+            rul[aux].setIntegerMatrix(integerMatrix);
+            rul[aux].setRealMatrix(realMatrix);
+        }
+        rs.setRules(rul);
+        
+        R[0] = rs;
     }
     
     public static void XMLFile(String dir, String name){
@@ -143,13 +486,21 @@ public class NSLVOrdJava {
         
         _xml.ExportPMML();
     }
+    */
+    public static String[][][][] export_rules(){
+        XML _xml = new XML(fuzzyProblem[0], R[0]);
+        String[][][][] export = _xml.export_rules();
+        
+        return export;
+    }
     
-    public static String[] Test(String[] _datas){
+    public static String[] Test(String[] _header,String[] _datas){
+        Attributes.clearAll();
         iter= new int[numDesplazamientos];
         time= new double[numDesplazamientos];
         
         // obtener las instancias (ejemplos) de training y test y pasarlas a "los objetos de mis clases"
-        if(!ReadSetTFG(null,_datas, false)) return null;
+        if(!ReadSetTFG(_header,_datas,false)) return null;
         
         if(!executeNSLVOrdPredictTFG()) return null;
            
@@ -164,7 +515,7 @@ public class NSLVOrdJava {
             System.out.println(_Resultado1);
         }*/
     }
-    
+    /*
     public static String[] ReadDatas(String _file) throws FileNotFoundException, IOException{
         String[] aux = new String[1000];
         
@@ -217,59 +568,13 @@ public class NSLVOrdJava {
         
         return _headers;
     }
-    
+    */
     /**
      * @param args the command line arguments
      */
+    
     public static void main(String[] args) throws InterruptedException, IOException {
-        fileTrain = "train_toy-0.arff";
         
-        String[] _Header = ReadHeader(fileTrain); 
-        String[] _Datas = ReadDatas(fileTrain);
-        
-        //configFile = args[0];
-        
-        String[] param = new String[20];
-        param[0] = "1286082570";
-        param[1] = "5";
-        param[2] = "5";
-        param[3] = "35";
-        param[4] = "0.5";
-        
-        param[5] = "-1";
-        param[6] = "500";
-        param[7] = "0.9";
-        param[8] = "0.25";
-        param[9] = "0.5";
-        param[10] = "0.17";
-        param[11] = "0.5"; 
-        param[12] = "0.0";
-        param[13] = "0.5";
-        param[14] = "0.01";
-        param[15] = "0.0";
-        param[16] = "0.25";
-        param[17] = "0.5";
-        param[18] = "0.14";
-        
-        String[] _Resultado = Train(_Header,_Datas,param);
-        
-        String dir = "./XMLFiles/"; 
-        String name = "IrisMamdani2";
-        //XMLFile(dir,name);
-        
-        fileTest = "test_toy-0.arff";
-        
-        _Datas = ReadDatas(fileTest);
-        
-        _Resultado = Test(_Datas);
-        
-        SeeRules("");
-        
-        /*for(String i : _Resultado){
-            System.out.println(i);
-        }*/
-        
-      /*
       if (args.length == 4){ //para el envío de e-mails
         DebugClass.origMail= args[1];
         DebugClass.passOrig= args[2];
@@ -322,9 +627,9 @@ public class NSLVOrdJava {
         //DebugClass.sendMail("nslv execution",aux,DebugClass.fileResultDebug+1);
         
       }
-      */
+      
     }
-
+    
     /**
      * get the parameters from file of configuration (in keel format)
      * @param configFile file of configuration parameters
@@ -497,8 +802,7 @@ public class NSLVOrdJava {
     public static boolean ReadSetTFG(String[] _header, String[] _datas, boolean _train){
         // obtener las instancias (ejemplos) de training y test y pasarlas a "los objetos de mis clases"
         InstanceSet _Set= new InstanceSet();
-        
-        _Set.readSetTFG(_header,_datas,_train);
+        _Set.readSetTFG(_header,_datas,true/*_train*/);
         _Set.setAttributesAsNonStatic();
         
         //si no hay ejemplos sale directamente
@@ -1428,7 +1732,7 @@ public class NSLVOrdJava {
           String result= E_par_test[index].calcAdaptExVarLabTFG();
           if (result.compareTo("") != 0){
               return false;                                
-          } 
+          }
           
           return true;
     }

@@ -3,8 +3,7 @@ classdef TFGFileReadClass
     methods (Static)
         function valid_archive(archive)     
             addpath(fullfile(fileparts(which('TFGFileReadClass.m')),'TFGReadFiles'));
-            
-            if exist([pwd '/TFGReadFiles/' archive],'file') ~= 2
+            if exist([pwd '\TFGReadFiles\' archive '.m'],'file') ~= 2
                 error('"%s" es un tipo de archivo no soportado', archive)
             end
             
