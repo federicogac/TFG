@@ -96,13 +96,13 @@ classdef NSLVOrd < Algorithm
         end
     
         function targets = ConvertCategoricToTargets(result,trans)
-            result = char(result);
-            if iscell(result)
-                result = cell2mat(result);
+            a = zeros(size(result,1),size(trans.cat,2));
+            for i = 1:size(a,1)
+                for j = 1:size(a,2)
+                    a(i,j) = double(strcmp(result(i),trans.cat{j}));
+                end
             end
-            result_m = repmat(result,1,length(trans.cat));
-            cat_m = repmat(char(trans.cat)',length(result),1);
-            a = (result_m == cat_m) * [1:length(trans.cat)]';
+            a = a * [1:length(trans.cat)]';
             targets = trans.num(a)';
         end
         

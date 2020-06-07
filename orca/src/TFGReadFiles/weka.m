@@ -136,19 +136,20 @@ classdef weka < Common
         
         function [datas,attnew] = ToOneHot(obj,patterns,att)
             % Convertir datos
-            val = char(att.info)';
-            val_m = repmat(val,length(patterns),1);
-            patterns = char(patterns);
-            patterns_m = repmat(patterns,1,length(val));
-            datas = double(patterns_m == val_m);
-            
+            datas = zeros(size(patterns,1),size(att.info,2));
+            for i = 1:size(datas,1)
+                for j = 1:size(datas,2)
+                    datas(i,j) = double(strcmp(patterns{i},att.info{j}));
+                end
+            end
+
             % Comprobar que ninguno sea un valor no valido
             ind = ~sum(datas,2);
             datas(ind,:) = NaN;
             
             % Nuevo tipo
             attnew = [];
-            for i = 1:length(val)
+            for i = 1:size(att.info,2)
                 att_aux.type = 'categoric';
                 att_aux.name = strcat(att.name,'_',int2str(i));
                 att_aux.info = ['0' '1'];
@@ -173,11 +174,13 @@ classdef weka < Common
             targets_type.num = 1:length(elements);
             
             % Convertir los datos
-            cat = char(targets_type.cat)';
-            cat_m = repmat(cat,length(datas),1);
-            datas = char(datas);
-            datas_m = repmat(datas,1,length(cat));
-            final_datas = double(datas_m == cat_m) * targets_type.num';
+            final_datas = zeros(size(datas,1),size(targets_type.cat,2));
+            for i = 1:size(final_datas,1)
+                for j = 1:size(final_datas,2)
+                    final_datas(i,j) = double(strcmp(datas{i},targets_type.cat{j}));
+                end
+            end
+            final_datas = final_datas * targets_type.num';
             
             % Comprobar que ninguno sea un valor no valido
             ind = ~sum(final_datas,2);

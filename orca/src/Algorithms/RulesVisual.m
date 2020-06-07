@@ -45,6 +45,9 @@ classdef RulesVisual < handle
         
         function add_antecedent(obj,variable,term) 
             term_aux = [];
+            if ~iscell(term)
+                term = {term};
+            end
             for i = 1:size(term,1)
                 for j = 1:size(term,2)
                     term_aux = [term_aux;{num2str(term{i,j})}];
