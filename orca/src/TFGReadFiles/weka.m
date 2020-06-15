@@ -131,7 +131,9 @@ classdef weka < Common
             end
             
             % Gardar las salidas
-            [targets,obj.attrs(end)] = obj.ToNumeric(datas(:,end),obj.attrs(end));
+            datas = datas(:,end);
+            att = obj.attrs(end);
+            [targets,obj.attrs(end)] = obj.ToNumeric(datas,att);
         end
         
         function [datas,attnew] = ToOneHot(obj,patterns,att)

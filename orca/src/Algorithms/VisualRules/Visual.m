@@ -6,8 +6,20 @@ function Visual(name,rules)
     javaaddpath(jarfolder);
      
     % Initialize VisualRules
-    visual = javaObject('visualrules.VisualRules');
-    
+    try
+        visual = javaObject('visualrules.VisualRules');
+    catch(ME)
+        disp('**************************');
+        disp('See rules is not possible.');
+        disp('**************************');
+        
+        % Clear Java
+        clear visual;
+        javarmpath(jarfolder);
+        
+        return;
+    end
+        
     % Add rules
     for i = 1:size(rules,2)
         namer = rules(i).Name;

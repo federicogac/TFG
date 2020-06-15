@@ -186,7 +186,8 @@ classdef NSLVOrd < Algorithm
             javarmpath(jarfolder);
                 
             % Process output
-            targets = obj.ConvertCategoricToTargets(result,train.info.personal.attrs(end).info);
+            trans = train.info.personal.attrs(end).info;
+            targets = obj.ConvertCategoricToTargets(result,trans);
             projectedTrain = targets; 
             predictedTrain = targets;
             

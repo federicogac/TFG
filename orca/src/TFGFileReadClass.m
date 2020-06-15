@@ -1,17 +1,22 @@
 % New file for TFG
 classdef TFGFileReadClass
-    methods (Static)
-        function valid_archive(archive)     
-            addpath(fullfile(fileparts(which('TFGFileReadClass.m')),'TFGReadFiles'));
-            if exist([pwd '\TFGReadFiles\' archive '.m'],'file') ~= 2
+    properties (Access = private)
+        path = fullfile(fileparts(which('TFGFileReadClass.m')),'TFGReadFiles');
+    end
+    
+    methods 
+        function valid_archive(obj,archive)     
+            addpath(obj.path);
+            
+            if exist(fullfile(obj.path,[archive '.m']),'file') ~= 2
                 error('"%s" es un tipo de archivo no soportado', archive)
             end
             
-            rmpath(fullfile(fileparts(which('TFGFileReadClass.m')),'TFGReadFiles'));
+            rmpath(obj.path);
         end
         
-        function datas = ReadFile(directory,file,cat)
-            addpath(fullfile(fileparts(which('TFGFileReadClass.m')),'TFGReadFiles'));
+        function datas = ReadFile(obj,directory,file,cat)
+            addpath(obj.path);
                         
             folders = strsplit(directory,'/');
             archive = char(folders(end));
@@ -20,16 +25,16 @@ classdef TFGFileReadClass
             raw = [directory '/' file];
             datas = TFGReadFiles.ReadFileFunction(raw,cat);
             
-            rmpath(fullfile(fileparts(which('TFGFileReadClass.m')),'TFGReadFiles'));
+            rmpath(obj.path);
         end
     
-        function [trainFileName,testFileName] = TFGFileName(dsdirectory, archive, dataSetName)
-            addpath(fullfile(fileparts(which('TFGFileReadClass.m')),'TFGReadFiles'));
+        function [trainFileName,testFileName] = TFGFileName(obj,dsdirectory, archive, dataSetName)
+            addpath(obj.path);
             
             format = feval(archive);
             [trainFileName,testFileName] = format.FormatFile(dsdirectory,archive,dataSetName);
 
-            rmpath(fullfile(fileparts(which('TFGFileReadClass.m')),'TFGReadFiles'));
+            rmpath(obj.path);
         end
     end
     
