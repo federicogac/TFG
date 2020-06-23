@@ -2915,7 +2915,7 @@ DebugClass.cuerpoMail+= "\n" + aux;
         valueReglaCombinado= Util.getCentralValue(claseInference, varCons, E_par[0]);
         RMSE+= Math.pow((valueEjemplo - valueReglaCombinado),2);
       
-        auxString+= E_par[0].getProblemDefinition().getFuzzyLinguisticVariableList(varCons).getFuzzyLinguisticTermList((int)valueEjemplo).getName();;
+        //auxString+= E_par[0].getProblemDefinition().getFuzzyLinguisticVariableList(varCons).getFuzzyLinguisticTermList((int)valueEjemplo).getName();;
         auxString+=" "+E_par[0].getProblemDefinition().getFuzzyLinguisticVariableList(varCons).getFuzzyLinguisticTermList((int)valueReglaCombinado).getName();;
         _Resultado[i] = E_par[0].getProblemDefinition().getFuzzyLinguisticVariableList(varCons).getFuzzyLinguisticTermList((int)valueReglaCombinado).getName();
         auxString+= "\n";

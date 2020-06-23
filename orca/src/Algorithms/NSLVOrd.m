@@ -56,19 +56,29 @@ classdef NSLVOrd < Algorithm
                 end
                 
                 line = strcat('@attribute',{' '},datas.info.personal.attrs(end).name,{' '});
-                line = strcat(line,'{',datas.info.personal.attrs(end).info.cat(1));
-                for j = 2:length(datas.info.personal.attrs(end).info.cat)
-                    line = strcat(line,',',datas.info.personal.attrs(end).info.cat(j));
+                if strcmp(datas.info.personal.attrs(end).type,'numeric')
+                    error('In NSLVOrd output should be categoric');
+                elseif strcmp(datas.info.personal.attrs(end).type,'categoric')
+                    line = strcat(line,'{',datas.info.personal.attrs(end).info.cat(1));
+                    for j = 2:length(datas.info.personal.attrs(end).info.cat)
+                        line = strcat(line,',',datas.info.personal.attrs(end).info.cat(j));
+                    end
+                    line = strcat(line,'}');
+                else
+                	error('error');
                 end
-                line = strcat(line,'}');
                 header = [header;line];
-                
             else
                 for i = 1:size(datas.patterns,2)
-                    line = strcat('@attribute x',int2str(i),' numeric');
+                    line = strcat('@attribute x',{int2str(i)},' numeric');
                     header = [header;line];
                 end
-                line = '@attribute y numeric';
+                aux = unique(datas.targets);
+                line = strcat('@attribute y {',num2str(aux(1)),{''});
+                for i = 2:size(aux,1)
+                    line = strcat(line,',',num2str(aux(i)));
+                end
+                line = strcat(line,'}');
                 header = [header;line];
             end
             header = [header;'@data'];
@@ -80,7 +90,11 @@ classdef NSLVOrd < Algorithm
             for i = 1:a
                 aux = '';
                 for j = 1:b-1
-                    aux = strcat(aux,datas(i,j),',');
+                    dat = datas(i,j);
+                    if strcmpi(class(dat),'double')
+                        dat = num2str(dat);
+                    end
+                    aux = strcat(aux,dat,',');
                 end
                 aux = strcat(aux,datas(i,b));
                 datas_java = [datas_java;aux];
@@ -88,13 +102,34 @@ classdef NSLVOrd < Algorithm
         end
     
         function targets = ConvertTargetsToCategoric(train)
-            trans = train.info.personal.attrs(end).info;
-            targets_m = repmat(train.targets,1,length(trans.num));
-            num_m = repmat(trans.num,length(train.targets),1);
-            a = (targets_m == num_m) * [1:length(trans.num)]';
-            targets = trans.cat(a)';
+            if strcmp(train.info.utilities.type,'weka')
+                trans = train.info.personal.attrs(end).info;
+                targets_m = repmat(train.targets,1,length(trans.num));
+                num_m = repmat(trans.num,length(train.targets),1);
+                a = (targets_m == num_m) * [1:length(trans.num)]';
+                targets = trans.cat(a)';
+            else
+                if strcmpi(class(train.targets),'double')
+                    targets = cellstr(num2str(train.targets));
+                else
+                    targets = train.targets;
+                end
+            end
         end
-    
+        
+        function patterns = ConvertPatternsToChar(patterns)
+            patt_aux = [];
+            for i = 1:size(patterns,2)
+                aux = patterns(:,i);
+                if strcmpi(class(aux),'double')
+                    patt_aux = [patt_aux cellstr(num2str(aux))];
+                else
+                    patt_aux = [patt_aux aux];
+                end
+            end
+            patterns = patt_aux;
+        end
+        
         function targets = ConvertCategoricToTargets(result,trans)
             a = zeros(size(result,1),size(trans.cat,2));
             for i = 1:size(a,1)
@@ -166,9 +201,9 @@ classdef NSLVOrd < Algorithm
             param_java = obj.initParameters(param);
             
             header = obj.getHeader(train);
-            
             targets = obj.ConvertTargetsToCategoric(train);
-            datas = [train.patterns targets];
+            patterns = obj.ConvertPatternsToChar(train.patterns);
+            datas = [patterns targets];
             datas = obj.getDatas(datas);
             
             % NSLVOrd Java
@@ -186,8 +221,16 @@ classdef NSLVOrd < Algorithm
             javarmpath(jarfolder);
                 
             % Process output
-            trans = train.info.personal.attrs(end).info;
-            targets = obj.ConvertCategoricToTargets(result,trans);
+            if strcmpi(train.info.utilities.type,'weka')
+                trans = train.info.personal.attrs(end).info;
+                targets = obj.ConvertCategoricToTargets(result,trans);
+            else
+                aux = [];
+                for i = 1:size(result,1)
+                    aux = [aux;str2double(result(i))];
+                end
+                targets = aux;
+            end
             projectedTrain = targets; 
             predictedTrain = targets;
             
@@ -200,7 +243,12 @@ classdef NSLVOrd < Algorithm
             model.knowledgebase =  obj.toCell(knowledgebase);
             model.rulebase = obj.toCell(rulebase);
             model.rules = obj.toCell(rules);
-            model.outPutsClass = train.info.personal.attrs(end).info;
+            if strcmpi(train.info.utilities.type,'weka')
+                model.outPutsClass = train.info.personal.attrs(end).info;
+            else
+                model.outPutsClass = {num2str(result(1))};
+            end
+            model.type = train.info.utilities.type;
             model.header = header;
             model.parameters = param;
             obj.model = model;
@@ -217,7 +265,12 @@ classdef NSLVOrd < Algorithm
             % It is called by super class Algorithm.predict() method.
             
             % Convert inputs to java objects
-            targets = repmat(obj.model.outPutsClass.cat(1),size(patterns,1),1);
+            if strcmpi(obj.model.type,'weka')
+            	targets = repmat(obj.model.outPutsClass.cat(1),size(patterns,1),1);
+            else
+                patterns = obj.ConvertPatternsToChar(patterns);
+                targets = repmat(obj.model.outPutsClass,size(patterns,1),1);
+            end
             
             datas = [patterns targets];
             datas = obj.getDatas(datas);
@@ -233,9 +286,18 @@ classdef NSLVOrd < Algorithm
             
             clear nslvord;
             javarmpath(jarfolder);
-            
-            % Procesar salidas
-            targets = obj.ConvertCategoricToTargets(result,obj.model.outPutsClass);
+             
+            % Process output
+            if strcmpi(obj.model.type,'weka')
+                trans = obj.model.outPutsClass;
+                targets = obj.ConvertCategoricToTargets(result,trans);
+            else
+                aux = [];
+                for i = 1:size(result,1)
+                    aux = [aux;str2double(result(i))];
+                end
+                targets = aux;
+            end
             projected = targets;
             predicted = targets;
         end

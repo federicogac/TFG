@@ -5,11 +5,11 @@ classdef TFGFileReadClass
     end
     
     methods 
-        function valid_archive(obj,archive)     
+        function Valid_archive(obj,archive)     
             addpath(obj.path);
             
-            if exist(fullfile(obj.path,[archive '.m']),'file') ~= 2
-                error('"%s" es un tipo de archivo no soportado', archive)
+            if exist(fullfile(obj.path,[lower(strtrim(archive)) '.m']),'file') ~= 2 || strcmpi(archive,'ReadFileCommon')
+                error('"%s" unsupported file type', archive)
             end
             
             rmpath(obj.path);
@@ -17,7 +17,7 @@ classdef TFGFileReadClass
         
         function datas = ReadFile(obj,directory,file,cat)
             addpath(obj.path);
-                        
+            
             folders = strsplit(directory,'/');
             archive = char(folders(end));
             
@@ -39,7 +39,7 @@ classdef TFGFileReadClass
     end
     
     methods (Static, Access = private)
-        function cols = searchInvalidValue(datas)
+        function cols = SearchInvalidValue(datas)
             [~,cols] = find(isnan(datas) | isinf(datas));
         end
     end

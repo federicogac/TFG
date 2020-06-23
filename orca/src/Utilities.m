@@ -438,7 +438,7 @@ classdef Utilities < handle
                     archive = expObj.general('archive');
                 end
                 
-                TFGFileReadClass().valid_archive(archive);
+                TFGFileReadClass().Valid_archive(archive);
                 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
                 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
                 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -497,54 +497,6 @@ classdef Utilities < handle
             rmpath(fullfile(fileparts(which('Utilities.m')),'Algorithms'));
             
         end
-        
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        %                      Add on TFG                      %
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        function cleanFiles(varargin)
-            if length(varargin) == 1
-                ori = string(varargin(1));
-                dest = string(varargin(1));
-            elseif length(varargin) == 2
-                ori = string(varargin(1));
-                dest = string(varargin(2));
-            else
-                error('error')
-            end
-            
-            if ~exist(ori,'dir')
-                error('Datasets directory "%s" does not exist', ori)
-            end
-            
-            if ~exist(dest,'dir')
-                mkdir(dest);
-            end
-            
-            files = dir(ori);
-            ori = files.folder;
-            dest = dir(dest);
-            dest = dest.folder;
-            for f = 3:length(files)
-                datas = load([ori '/' files(f).name]);
-                
-                [fils,cols]=find(isnan(datas) | isinf(datas));
-                fils = unique(fils);
-                datas(fils,:) = [];
-                
-                file = [dest '/' files(f).name];
-                fich = fopen(file,'w');
-                for i = 1:size(datas,1)
-                    for j = 1:size(datas,2)
-                        fprintf(fich,string(datas(i,j)) + ' ');
-                    end
-                    fprintf(fich,'\n');
-                end
-                fclose(fich);
-            end
-        end
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     end
     
     methods(Static = true, Access = private)

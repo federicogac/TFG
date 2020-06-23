@@ -1,4 +1,3 @@
-% File changed for TFG
 classdef Experiment < handle
     %EXPERIMENT creates an experiment to run an ORCA's experiment which
     %   consist on optimising and running a method in fold (a pair of train-test

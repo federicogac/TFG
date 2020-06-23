@@ -1,7 +1,7 @@
 % New file for TFG
-classdef matlab < Common
+classdef matlab < ReadFileCommon
     methods 
-        function [file_train_expr, file_test_expr] = format(obj,dataSetName)
+        function [file_train_expr, file_test_expr] = Format(obj,dataSetName)
             file_train_expr = ['train_' dataSetName '.*']; 
             file_test_expr = ['test_' dataSetName '.*']; 
         end

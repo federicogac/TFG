@@ -1,11 +1,11 @@
 % New file for TFG
-classdef weka < Common
+classdef weka < ReadFileCommon
     properties
         attrs = [];
     end
     
     methods
-        function [file_train_expr, file_test_expr] = format(obj,dataSetName)
+        function [file_train_expr, file_test_expr] = Format(obj,dataSetName)
             file_train_expr = ['train_' dataSetName '-*.arff'];
             file_test_expr = ['test_' dataSetName '-*.arff'];
         end
@@ -20,10 +20,10 @@ classdef weka < Common
         function [patterns,targets] = ReadWekaFile(obj,file_name)
             file = fopen(file_name, 'rt');
             
-            % Leer la cabecera
+            % Read header
             obj.ReadHeader(file);
             
-            % Leer los datos
+            % Read datas
             [patterns,targets] = obj.ReadDatas(file);
             
             fclose(file);
@@ -36,33 +36,37 @@ classdef weka < Common
                 if ~isempty(line)
                     vec = strsplit(line,' ');
                     if strcmpi(vec(1),'@attribute') 
-                        % Verifica que el atributo contenga 
-                        % un nombre y el tipo de atributo
+                        % Check if attribute have a name
+                        % and type
                         if length(vec) < 3
-                            error('error');
+                            error('Attribute incorrect.');
                         end
                         
-                        % Leer el nombre y tipo de atributo
+                        % Read name and type
                         name = vec(2);
                         aux = strcat(name,{' '});
                         aux = aux{1};
                         ini = length(aux) + 12;
                         type = lower(line(ini:end));
                         
-                        % Añadir el atributo
+                        % Add attribute
                         obj.NewAttribute(name,type);
                     elseif strcmpi(vec(1),'@data')
-                        break;
+                        if length(obj.attrs) < 2
+                            error('Need more attributes.');
+                        end
+                        return;
                     end
                 end
             end
+            error('Unrecognized as WEKA format.')
         end
         
         function NewAttribute(obj,name,type)
             % Comprobar que no exista el nombre en otro atributo
             if ~isempty(obj.attrs)
                 if ismember(name,[obj.attrs.name])
-                    error('error');
+                    error('Attributes with same name.');
                 end
             end
             
@@ -76,12 +80,12 @@ classdef weka < Common
                     [info,num] = strsplit(type,',');
                     for i = num
                         if length(i{1}) ~= 1
-                            error('error');
+                            error('Categoric attribute without type.');
                         end
                     end
                     type = 'categoric';
                 else
-                    error('error');
+                    error('Attributes should be numeric or categoric.');
                 end
             end
             
@@ -105,30 +109,48 @@ classdef weka < Common
             end
             datas = lower(datas);
             
+            if isempty(datas)
+                error('No data found.');
+            end
+            
             % Guardar las entradas
-            patterns = datas(:,1:end-1);
-            if obj.categ == 0
-                patterns_aux = [];
-                att_aux = [];
-                for i = 1:size(patterns,2)
-                    if strcmp(obj.attrs(i).type,'categoric')
-                        [patt,atti] = obj.ToOneHot(patterns(:,i),obj.attrs(i));
-                        patterns_aux = [patterns_aux patt];
+            patterns_aux = datas(:,1:end-1);
+            patterns = [];
+            att_aux = [];
+            for i = 1:size(patterns_aux,2)
+                if strcmp(obj.attrs(i).type,'categoric')
+                    if obj.categ == 0
+                        [patt,atti] = obj.ToOneHot(patterns_aux(:,i),obj.attrs(i));
+                        patterns = [patterns patt];
                         att_aux = [att_aux;atti];
-                    elseif strcmp(obj.attrs(i).type,'numeric')
-                        line_aux = zeros(length(patterns(:,i)),1);
-                        for j = 1:length(line_aux)
-                            line_aux(j) = str2double(patterns(j,i));
-                        end
-                        patterns_aux = [patterns_aux line_aux];
+                    else
+                        aux = patterns_aux(:,i);
+                        elements = obj.attrs(i).info;
+                        [k,~] = obj.Categoric_to_Numeric(aux,elements);
+                        aux(find(isnan(k),1)) = {NaN};
+                        
+                        patterns = [patterns aux];
+                        att_aux = [att_aux;obj.attrs(i)];
+                    end
+                elseif strcmp(obj.attrs(i).type,'numeric')
+                    line_aux = zeros(length(patterns_aux(:,i)),1);
+                    for j = 1:length(line_aux)
+                    	line_aux(j) = str2double(patterns_aux(j,i));
+                    end
+                    if obj.categ == 0
+                        patterns = [patterns line_aux];
                         att_aux = [att_aux;obj.attrs(i)];
                     else
-                        error('error');    
+                        aux = patterns_aux(:,i);
+                        aux(find(isnan(line_aux),1)) = {NaN};
+                        patterns = [patterns aux];
+                        att_aux = [att_aux;obj.attrs(i)];
                     end
+                else
+                    error('Attribute type no valid.');    
                 end
-                patterns = patterns_aux;
-                obj.attrs = [att_aux;obj.attrs(end)];
             end
+            obj.attrs = [att_aux;obj.attrs(end)];
             
             % Gardar las salidas
             datas = datas(:,end);
@@ -137,7 +159,7 @@ classdef weka < Common
         end
         
         function [datas,attnew] = ToOneHot(obj,patterns,att)
-            % Convertir datos
+            % Convert datas
             datas = zeros(size(patterns,1),size(att.info,2));
             for i = 1:size(datas,1)
                 for j = 1:size(datas,2)
@@ -145,11 +167,11 @@ classdef weka < Common
                 end
             end
 
-            % Comprobar que ninguno sea un valor no valido
+            % Check all values are valids
             ind = ~sum(datas,2);
             datas(ind,:) = NaN;
             
-            % Nuevo tipo
+            % Update attribute
             attnew = [];
             for i = 1:size(att.info,2)
                 att_aux.type = 'categoric';
@@ -160,17 +182,20 @@ classdef weka < Common
         end
         
         function [datas,att] = ToNumeric(obj,datas,att)
-            if att.type ~= 'categoric'
-                error('error');
+            if strcmpi(att.type,'numeric')
+                line_aux = zeros(size(datas));
+                for j = 1:size(line_aux,1)
+                	line_aux(j) = str2double(datas(j));
+                end
+                datas = line_aux;
+            elseif strcmpi(att.type,'categoric')
+                elements = att.info;
+                [datas,convert] = obj.Categoric_to_Numeric(datas,elements);
+                att.info = convert;
             end
-            elements = att.info;
-            [datas,convert] = obj.Categoric_to_Numeric(datas,elements);
-            att.info = convert;
         end
         
         function [final_datas,targets_type] = Categoric_to_Numeric(obj,datas,elements)
-            elements = sort(elements);
-            
             % Apuntar la conversion
             targets_type.cat = elements;
             targets_type.num = 1:length(elements);

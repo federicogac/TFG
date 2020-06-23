@@ -232,41 +232,6 @@ classdef DataSet < handle
                end
             end
         end
-        
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        %                      Add on TFG                      %
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        function [trainSetPatterns,testSetPatterns,catt] = SplitDatas(trainSet,testSet)
-            catt = trainSet.info.utilities.categ_att(1:end-1);
-            if isempty(catt) 
-                trainSetPatterns = trainSet.patterns;
-                testSetPatterns = testSet.patterns;
-            else
-                catt = find(~catt);
-                
-                trainSetPatterns = str2double(trainSet.patterns(:,catt));
-                testSetPatterns = str2double(testSet.patterns(:,catt));
-            end
-        end
-        
-        function [trainSet,testSet] = JoinDatas(trainSet,trainSetPatterns,testSet,testSetPatterns,catt)
-            if isempty(catt) 
-                trainSet.patterns = trainSetPatterns;
-                testSet.patterns = testSetPatterns;
-            else
-                j = 1;
-                for i = 1:length(catt)
-                    it = catt(i);
-                    trainSet.patterns(:,it) = trainSetPatterns(:,j);
-                    testSet.patterns(:,it) = testSetPatterns(:,j);
-                    j = j + 1;
-                end
-            end
-        end
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
     end
 end
 
