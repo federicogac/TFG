@@ -8,7 +8,7 @@ function Visual(name,rules)
     % Initialize VisualRules
     try
         visual = javaObject('visualrules.VisualRules');
-    catch(ME)
+    catch
         disp('**************************');
         disp('See rules is not possible.');
         disp('**************************');

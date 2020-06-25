@@ -85,7 +85,7 @@ classdef Algorithm < handle
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             %                      Add on TFG                      %
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-            if ~obj.categ & ~isa(test,'double') % Modificado TFG añadido '~obj.categ &'
+            if ~obj.categ && ~isa(test,'double') % Modificado TFG añadido '~obj.categ &&'
                 error('test parameter has to be a matrix')
             end
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

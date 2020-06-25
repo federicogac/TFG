@@ -97,27 +97,12 @@ classdef DataSet < handle
         %
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         
-        % Changed for TFG
         function [trainSet, testSet] = standarizeData(trainSet,testSet)
         % STANDARIZEDATA standarizes a set of training and testing patterns.
         %   [TRAINSET, TESTSET] = STANDARIZEDATA(TRAINSET,TESTSET)
         %   standarizes TRAINSET and TESTSET with TRAINSET mean and std. 
-        
-            %[trainSet.patterns, trainMeans, trainStds] = DataSet.standarizeFunction(trainSet.patterns);
-            %testSet.patterns = DataSet.standarizeFunction(testSet.patterns,trainMeans,trainStds);
-            
-            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-            %                      Add on TFG                      %
-            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-            [trainSetPatterns,testSetPatterns,catt] = DataSet.SplitDatas(trainSet,testSet);
-            
-            [trainSetPatterns, trainMeans, trainStds] = DataSet.standarizeFunction(trainSetPatterns);
-            testSetPatterns = DataSet.standarizeFunction(testSetPatterns,trainMeans,trainStds);
-            
-            [trainSet,testSet] = DataSet.JoinDatas(trainSet,trainSetPatterns,testSet,testSetPatterns,catt);
-            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            [trainSet.patterns, trainMeans, trainStds] = DataSet.standarizeFunction(trainSet.patterns);
+            testSet.patterns = DataSet.standarizeFunction(testSet.patterns,trainMeans,trainStds);
         end
                 
         function [XN, XMeans, XStds] = standarizeFunction(X,XMeans,XStds)

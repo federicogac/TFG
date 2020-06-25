@@ -25,11 +25,11 @@ classdef ReadFileCommon < handle
         
         function datas = ReadFileFunction(obj,file,cat)
             obj.categ = cat;
-            %try
+            try
                 datas = obj.ReadFile(file);
-            %catch ME
-                %error('Cannot read file "%s" \n %s', file, ME.message)
-            %end
+            catch ME
+                error('Cannot read file "%s" \n %s', file, ME.message)
+            end
             datas = obj.deleteNonNumericValues(datas);
             
             datas.info.personal = obj.info;

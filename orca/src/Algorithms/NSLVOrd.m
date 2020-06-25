@@ -65,7 +65,7 @@ classdef NSLVOrd < Algorithm
                     end
                     line = strcat(line,'}');
                 else
-                	error('error');
+                	error('In NSLVOrd output should be categoric');
                 end
                 header = [header;line];
             else
@@ -237,7 +237,9 @@ classdef NSLVOrd < Algorithm
             % Save the model
             try
                 model.name = train.name;
+                SeeRules = param.SeeRules;
             catch
+                SeeRules = 0;
             end
             %wres = obj.toCharkiko(knowledgebase)
             model.knowledgebase =  obj.toCell(knowledgebase);
@@ -254,8 +256,8 @@ classdef NSLVOrd < Algorithm
             obj.model = model;
             
             % See rules
-            if param.SeeRules
-                obj.visual_rules();
+            if SeeRules
+            	obj.visual_rules();
             end
         end
         
