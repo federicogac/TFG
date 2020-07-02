@@ -13,6 +13,8 @@ classdef Algorithm < handle
     properties
         model = [];
         categ = false; % Changed for TFG: know if categorical is valid 
+        export = false; % Changed for TFG: know if can export rules 
+        visual = false; % Changed for TFG: know if can see rules 
     end
           
     methods
@@ -213,6 +215,20 @@ classdef Algorithm < handle
                 name_parameters = [];
             end
         end
+        
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %                      Add on TFG                      %
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        function export_rules(obj,dir)
+            disp('Class ' + class(obj) + ' can not export rules.')
+        end
+        
+        function visual_rules(obj)
+            disp('Class ' + class(obj) + ' can not see rules.')
+        end
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     end
     
 end

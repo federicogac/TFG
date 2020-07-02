@@ -8,7 +8,7 @@ classdef NSLVOrd < Algorithm
                             'IniProbBin', 0.9, 'CrosProbBin', 0.25, 'MutProbBin', 0.5, 'MutProbEachBin', 0.17,...
                             'IniProbInt', 0.5, 'CrosProbInt', 0.0, 'MutProbInt', 0.5,'MutProbEachInt', 0.01,...
                             'IniProbReal', 0.0, 'CrosProbReal', 0.25,'MutProbReal', 0.5, 'MutProbEachReal', 0.14,...
-                            'SeeRules', 0);
+                            'SeeRules', 0, 'ExportRules', 0);
                           
     end
     
@@ -101,19 +101,24 @@ classdef NSLVOrd < Algorithm
             end
         end
     
-        function targets = ConvertTargetsToCategoric(train)
+        function [targets,output] = ConvertTargetsToCategoric(train)
             if strcmp(train.info.utilities.type,'weka')
                 trans = train.info.personal.attrs(end).info;
                 targets_m = repmat(train.targets,1,length(trans.num));
                 num_m = repmat(trans.num,length(train.targets),1);
                 a = (targets_m == num_m) * [1:length(trans.num)]';
                 targets = trans.cat(a)';
+                output.cat = trans.cat;
+                output.num = trans.num;
             else
-                if strcmpi(class(train.targets),'double')
-                    targets = cellstr(num2str(train.targets));
-                else
-                    targets = train.targets;
+                aux = unique(train.targets);
+                aux_cat = [];
+                for i = 1:length(aux)
+                    aux_cat = [aux_cat {num2str(aux(i))}];
                 end
+                output.cat = aux_cat;
+                output.num = unique(train.targets)';
+                targets = cellstr(num2str(train.targets));
             end
         end
         
@@ -189,7 +194,6 @@ classdef NSLVOrd < Algorithm
         function obj = NSLVOrd(~,varargin)
             % Process key-values pairs of parameters
             obj.parseArgs(varargin);
-            
             obj.categ = true;
         end
         
@@ -201,7 +205,7 @@ classdef NSLVOrd < Algorithm
             param_java = obj.initParameters(param);
             
             header = obj.getHeader(train);
-            targets = obj.ConvertTargetsToCategoric(train);
+            [targets,output] = obj.ConvertTargetsToCategoric(train);
             patterns = obj.ConvertPatternsToChar(train.patterns);
             datas = [patterns targets];
             datas = obj.getDatas(datas);
@@ -221,44 +225,28 @@ classdef NSLVOrd < Algorithm
             javarmpath(jarfolder);
                 
             % Process output
-            if strcmpi(train.info.utilities.type,'weka')
-                trans = train.info.personal.attrs(end).info;
-                targets = obj.ConvertCategoricToTargets(result,trans);
-            else
-                aux = [];
-                for i = 1:size(result,1)
-                    aux = [aux;str2double(result(i))];
-                end
-                targets = aux;
-            end
+            %if strcmpi(train.info.utilities.type,'weka')
+            targets = obj.ConvertCategoricToTargets(result,output);
             projectedTrain = targets; 
             predictedTrain = targets;
             
             % Save the model
             try
                 model.name = train.name;
-                SeeRules = param.SeeRules;
             catch
-                SeeRules = 0;
             end
-            %wres = obj.toCharkiko(knowledgebase)
+            model.output = output;
             model.knowledgebase =  obj.toCell(knowledgebase);
             model.rulebase = obj.toCell(rulebase);
             model.rules = obj.toCell(rules);
-            if strcmpi(train.info.utilities.type,'weka')
-                model.outPutsClass = train.info.personal.attrs(end).info;
-            else
-                model.outPutsClass = {num2str(result(1))};
-            end
             model.type = train.info.utilities.type;
             model.header = header;
             model.parameters = param;
             obj.model = model;
             
-            % See rules
-            if SeeRules
-            	obj.visual_rules();
-            end
+            % Active export and see rules
+            obj.export = param.ExportRules;
+            obj.visual = param.SeeRules;
         end
         
         function [projected, predicted] = privpredict(obj, patterns)
@@ -267,15 +255,8 @@ classdef NSLVOrd < Algorithm
             % It is called by super class Algorithm.predict() method.
             
             % Convert inputs to java objects
-            if strcmpi(obj.model.type,'weka')
-            	targets = repmat(obj.model.outPutsClass.cat(1),size(patterns,1),1);
-            else
-                patterns = obj.ConvertPatternsToChar(patterns);
-                targets = repmat(obj.model.outPutsClass,size(patterns,1),1);
-            end
-            
-            datas = [patterns targets];
-            datas = obj.getDatas(datas);
+            patterns = obj.ConvertPatternsToChar(patterns);
+            datas = obj.getDatas(patterns);
             
             % NSLVOrd Java
             algorithmPath = fullfile(fileparts(which('Algorithm.m')),'NSLVOrd');
@@ -290,16 +271,8 @@ classdef NSLVOrd < Algorithm
             javarmpath(jarfolder);
              
             % Process output
-            if strcmpi(obj.model.type,'weka')
-                trans = obj.model.outPutsClass;
-                targets = obj.ConvertCategoricToTargets(result,trans);
-            else
-                aux = [];
-                for i = 1:size(result,1)
-                    aux = [aux;str2double(result(i))];
-                end
-                targets = aux;
-            end
+            output = obj.model.output;
+            targets = obj.ConvertCategoricToTargets(result,output);
             projected = targets;
             predicted = targets;
         end

@@ -238,10 +238,10 @@ public class InstanceSet {
   public void readSetTFG(String[] _header, String[] _datas,boolean isTrain ){
     
     // Reading information in the header, i.e., @relation, @attribute, @inputs and @outputs
-    if(isTrain) parseHeaderTFG ( _header, isTrain );
+    /*if(isTrain)*/ parseHeaderTFG ( _header, true/*isTrain*/ );
     
     //The attributes statistics are init if we are in train mode.
-    if (isTrain && Attributes.getOutputNumAttributes() == 1){
+    if (/*isTrain &&*/ Attributes.getOutputNumAttributes() == 1){
         Attributes.initStatistics();
     }
     
@@ -249,6 +249,9 @@ public class InstanceSet {
     
     Vector tempSet=new Vector(1000,100000);
     for(String line : _datas) {
+        if(!isTrain){
+            line = line + ",?";
+        }
         //System.out.println ("    > Data line: " + line );
         tempSet.addElement( new Instance( line, isTrain, tempSet.size()) );
     }

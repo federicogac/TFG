@@ -98,14 +98,22 @@ function WriteFile(f,dir,name)
     end
     
     % Export JFML
-    disp('Export JFML...');
-    a = javaObject('jfml.JFML');
-    file = javaObject('java.io.File',[dir '/' name '_JFML.xml']);
-    javaMethod('writeFSTtoXML',a,f,file);
+    try
+        disp('Export JFML...');
+        a = javaObject('jfml.JFML');
+        file = javaObject('java.io.File',[dir '/' name '_JFML.xml']);
+        javaMethod('writeFSTtoXML',a,f,file);
+    catch 
+        disp('JFML can not export');
+    end
     
     % Export PMML
-    disp('Export PMML...');
-    b = javaObject('jfml.compatibility.ExportPMML');
-    file = [dir '/' name '_PMML.xml'];
-    javaMethod('exportFuzzySystem',b,f,file);
+    try
+        disp('Export PMML...');
+        b = javaObject('jfml.compatibility.ExportPMML');
+        file = [dir '/' name '_PMML.xml'];
+        javaMethod('exportFuzzySystem',b,f,file);
+    catch 
+        disp('PMML can not export');
+    end
 end

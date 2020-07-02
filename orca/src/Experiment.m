@@ -127,6 +127,7 @@ classdef Experiment < handle
             end
         end
         
+        % Changed for TFG
         function obj = saveResults(obj,TotalResults)
             % SAVERESULTS saves the results of the experiment and
             % the best hyperparameters.
@@ -170,6 +171,19 @@ classdef Experiment < handle
             outputFile = [obj.resultsDir filesep 'Guess' filesep obj.data.test ];
             dlmwrite(outputFile, TotalResults.projectedTest, 'precision', '%.15f');
             
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            %                      Add on TFG                      %
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            if obj.method.export
+                obj.method.export_rules([obj.resultsDir filesep 'Models']);
+            end
+            
+            if obj.method.visual
+                obj.method.visual_rules();
+            end
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         end
         
         function optimals = crossValideParams(obj,train)

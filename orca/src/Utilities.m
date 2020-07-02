@@ -435,7 +435,7 @@ classdef Utilities < handle
                 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
                 archive = 'matlab';
                 if isKey(expObj.general,'archive')    
-                    archive = expObj.general('archive');
+                    archive = lower(expObj.general('archive'));
                 end
                 
                 TFGFileReadClass().Valid_archive(archive);
@@ -693,7 +693,6 @@ classdef Utilities < handle
                 end
             end
         end
-        
     end
 end
 

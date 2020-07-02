@@ -1,6 +1,6 @@
 package NSLVOrdJava;
 
-// para la integración en keel
+// para la integracion en keel
 import keel.Dataset.*;
 
 import java.util.*;
@@ -8,15 +8,15 @@ import java.util.*;
 /**
  * @file NSLVOrd.java
  * @brief main file of proyect
- * @author Juan Carlos Gámez (original de Raúl Pérez)
+ * @author Juan Carlos Gamez (original de Raul Perez)
  * @version 1
  * @date diciembre 2015
  * @note Implement of NSLV algorithm for ordinal classification
  */
 public class NSLVOrdJava {
 
-    // habrá 3 valores: indice 0->izda, indice 1->centro, indice 2->dcha
-//    static int numDesplazamientos=3;
+    // habra 3 valores: indice 0->izda, indice 1->centro, indice 2->dcha
+    // static int numDesplazamientos=3;
     static int numDesplazamientos=1;
     static double[] time;
     static int[] iter;
@@ -35,10 +35,10 @@ public class NSLVOrdJava {
     static int seed;
     static int numLabelsInputs;
     static int numLabelsOutput;
-    static int shift; // 5% de la mitad del tamaño de la etiqueta para el desplazamiento
- 
-    static int homogeneousLabel=0; // se elimina el parámetro de cuda para introducir la creación de etiquetas homogéneas
-    // parámetros de ponderación de la característica ordinal o nominal de la función fitness
+    static int shift;
+    
+    static int homogeneousLabel=0; // se elimina el parametro de cuda para introducir la creacion de etiquetas homogeneas
+    // parametros de ponderacion de la caracteristica ordinal o nominal de la funcion fitness
     // alpha * CCR y (1-alpha) * MAE
     static double alpha=0.5;
     
@@ -48,7 +48,7 @@ public class NSLVOrdJava {
         Attributes.clearAll();
         initParameters(args);
         
-        // Aquí se inicializa Random
+        // Aqui se inicializa Random
         randomNum= new Random[numDesplazamientos];
         iter= new int[numDesplazamientos];
         time= new double[numDesplazamientos];
@@ -61,18 +61,8 @@ public class NSLVOrdJava {
                 
         if(!executeNSLVOrd(homogeneousLabel)) return null;
         
-        //String dir = "./XMLFiles/"; 
-        //String name = "IrisMamdani2";
-        //XMLFile(dir,name);
-        
         return Targets(E_par,1);
         
-        //double[] Resultado;
-        //Resultado= DebugClass.printForCalcMetricsTFG(E_par[0],R[0]);
-     
-        // Imprimir reglas            
-        //String auxString= DebugClass.printUnderstableRuleSet(R[0], fuzzyProblem[0]);
-        //System.out.println(auxString);
     }
     
     public static FuzzyProblemClass[] GetFuzzyProblem(){
@@ -273,47 +263,28 @@ public class NSLVOrdJava {
         
         if(!executeNSLVOrdPredict()) return null;
            
-        //double[] Resultado;
-        //Resultado= DebugClass.printForCalcMetricsTFG(E_par_test[0],R[0]);
-     
-        //SeeRules();
-        
         return Targets(E_par_test,1);
-        
-        /*for (String _Resultado1 : _Resultado) {
-            System.out.println(_Resultado1);
-        }*/
     }
     
     public static void initParameters(String[] param){
-
-        String auxString;
-        
         fuzzyProblem = new FuzzyProblemClass[numDesplazamientos];
         E_par= new ExampleSetProcess[numDesplazamientos];
         E_par_test= new ExampleSetProcess[numDesplazamientos];
         R= new RuleSetClass[numDesplazamientos];
         
-        // Realizar el procesamiento del fichero de configuración Keel
-        //parametersKeel= getParametersKeel(configFile);
-        //fileTrain= parametersKeel[0];
-        //fileTest= parametersKeel[2];
         seed= Integer.parseInt(param[0]);
-        // el parámetro 7 (numIndividuals) (size population) se consideran en la inicialización de la población
-        // el parámetro 8 (maxIterGenetico) (max number of iterations of genetic algorithm) se considera al inicializar la población
         homogeneousLabel = 0;
         numLabelsInputs= Integer.parseInt(param[1]);
         numLabelsOutput= Integer.parseInt(param[2]);
-        shift= Integer.parseInt(param[3]); // 5% de la mitad del tamaño de la etiqueta para el desplazamiento
-        alpha= Double.parseDouble(param[4]); // indica si realiza clasificación(1) o regresion(0)
-//        beta= Double.parseDouble(parametersKeel[28]); // indica si realiza clasificación(1) o regresion(0)
+        shift= Integer.parseInt(param[3]); 
+        alpha= Double.parseDouble(param[4]); // indica si realiza clasificacion(1) o regresion(0)
         if ((alpha + (1-alpha)) != 1){
             alpha= 0.5;
         }
-        // el resto de parámetros que corresponden a las probabilidades de 
-        // inicialización, cruce y mutación de las subpoblaciones y de cada 
-        // elemento de la subpoblación son consideradas en la inicialización de la población
-        
+
+        // el resto de parametros que corresponden a las probabilidades de 
+        // inicializacion, cruce y mutacion de las subpoblaciones y de cada 
+        // elemento de la subpoblacion 
         poblationParam = new String[14];
         poblationParam[0] = param[5];
         poblationParam[1] = param[6];
@@ -334,7 +305,7 @@ public class NSLVOrdJava {
     public static boolean ReadSet(String[] _header, String[] _datas, boolean _train){
         // obtener las instancias (ejemplos) de training y test y pasarlas a "los objetos de mis clases"
         InstanceSet _Set= new InstanceSet();
-        _Set.readSetTFG(_header,_datas,true/*_train*/);
+        _Set.readSetTFG(_header,_datas,_train);
         _Set.setAttributesAsNonStatic();
         
         //si no hay ejemplos sale directamente
@@ -352,28 +323,28 @@ public class NSLVOrdJava {
     }
     
     public static boolean executeNSLVOrd(int homogeneousLabel){
-        // parte de ejecución en serie       
+        // parte de ejecucion en serie       
         randomNum[0]= new Random(seed);
-        return executeLearning(0, 0, 0, homogeneousLabel); // para probar por ahora nada más que con una ejecución
-        // FIN - parte de ejecución en serie  
+        return executeLearning(0, 0, 0, homogeneousLabel); // para probar por ahora nada mas que con una ejecucion
+        // FIN - parte de ejecucion en serie  
     }
     
     public static boolean executeNSLVOrdPredict() {
-        // parte de ejecución en serie        
-        return executePredict(0, 0, 0); // para probar por ahora nada más que con una ejecución
-        // FIN - parte de ejecución en serie
+        // parte de ejecucion en serie        
+        return executePredict(0, 0, 0); // para probar por ahora nada mas que con una ejecucion
+        // FIN - parte de ejecucion en serie
     }
 
     public static boolean executeLearning(int shift, int direction, int index, int homogeneousLabel){    
           iter[index]=0;
           if (numLabelsInputs == -1 || numLabelsOutput == -1){
-            // constructor para la creación de etiquetas no homogéneas (en función del número de individuos por etiqueta)
+            // constructor para la creacion de etiquetas no homogeneas (en funcion del numero de individuos por etiqueta)
             numLabelsInputs = 11;
             numLabelsOutput = 11;
             fuzzyProblem[index]= new FuzzyProblemClass(iSet, numLabelsInputs, numLabelsOutput, shift, direction, homogeneousLabel);
           }
           else{
-            // constructor original para la creación de etiquetas homogéneas
+            // constructor original para la creacion de etiquetas homogeneas
             fuzzyProblem[index]= new FuzzyProblemClass(iSet, numLabelsInputs, numLabelsOutput, shift, direction, homogeneousLabel);
           }
           // pasar los ejemplos a "mis objetos"
@@ -383,29 +354,29 @@ public class NSLVOrdJava {
               return false;                                
           } 
 
-          // calcular las medidas de información para agilizar los cálculos
+          // calcular las medidas de informacion para agilizar los calculos
           E_par[index].calcInformationMeasures();
 
-          // crear el objeto para el algoritmo genético
+          // crear el objeto para el algoritmo genetico
           R[index]= new RuleSetClass(alpha);        
 
-          //creación del objeto genético e inicializarlo
+          //creacion del objeto genetico e inicializarlo
           GeneticAlgorithmClass GA= new GeneticAlgorithmClass(poblationParam, E_par[index]); 
-          // inicializar la población
+          // inicializar la poblacion
           GA.initPopulation(randomNum[index],E_par[index],costMatrix);            
           
 
-          // BEGIN - aquí comenzaría el bloque de ejecuciones del algoritmo genético
+          // BEGIN - aqui comenzaria el bloque de ejecuciones del algoritmo genetico
           Util.initStatisticalData(GA.getP(), fuzzyProblem[index]);
 
           // calcular la nueva regla
           int ejemplosCubiertos=0, eliminadoReglas=0, newRule=1;
           Util.numIterGenetic++;
 
-          //// AQUÍ PARA AÑADIR O NO LA REGLA POR DEFECTO AL COMIENZO ... -> ESTO NO SE MODIFICARÁ LUEGO --> HABRÁ QUE TENERLO EN CUENTA EN LA PARTE DE REGRESIÓN
+          //// AQUI PARA ANNADIR O NO LA REGLA POR DEFECTO AL COMIENZO ...
           int addDefaultRule=0;
           Util.classDefaultRule= GA.setDefaultRule(addDefaultRule,E_par[index],R[index]);
-          if (addDefaultRule == 1){ // Sí se ha includo la regla por defecto al principio.
+          if (addDefaultRule == 1){ // Si se ha includo la regla por defecto al principio.
             ejemplosCubiertos= E_par[index].calcCoveredTFG(R[index],GA.getP(), fuzzyProblem[index]);             
           }
 
@@ -413,14 +384,14 @@ public class NSLVOrdJava {
           while (eliminadoReglas == 1){
             while (newRule == 1 && ejemplosCubiertos < E_par[index].numExamples){  
               iter[index]++;
-              newRule= GA.findNewRuleTFG(randomNum[index],0,E_par[index],R[index]); // en la versión de homogeneousLabel se ha eliminado la opción de cuda
+              newRule= GA.findNewRuleTFG(randomNum[index],0,E_par[index],R[index]); // en la version de homogeneousLabel se ha eliminado la opcion de cuda
               Util.numIterGenetic++;
 
               ejemplosCubiertos= E_par[index].calcCoveredTFG(R[index],GA.getP(),fuzzyProblem[index]);
   
 
             }//while (newRule == 1){  
-              eliminadoReglas= R[index].removeRulesForImproveMetricTFG(E_par[index],GA, fuzzyProblem[index]); // probar a quitar reglas y ver si mejora la precisión
+              eliminadoReglas= R[index].removeRulesForImproveMetricTFG(E_par[index],GA, fuzzyProblem[index]); // probar a quitar reglas y ver si mejora la precision
               if (eliminadoReglas == 1){
                 newRule=1;      
                 ejemplosCubiertos= E_par[index].calcCoveredTFG(R[index], GA.getP(), fuzzyProblem[index]);
@@ -436,11 +407,6 @@ public class NSLVOrdJava {
     }
 
     public static boolean executePredict(int shift, int direction, int index){    
-    
-          String auxString="";
-          int numRules;       // numero de reglas de la particion
-          double varXRule;    // media de numero de variables por regla
-
           iter[index]=0;
           
           // pasar los ejemplos a "mis objetos"
